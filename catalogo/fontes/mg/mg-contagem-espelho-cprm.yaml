@@ -1,0 +1,48 @@
+id: mg-contagem-espelho-cprm
+sigla: PMC
+nome: Setorização de risco geológico de Contagem
+orgao: Prefeitura de Contagem (republicação da setorização da CPRM)
+esfera: municipal
+abrangencia:
+  uf: MG
+  municipios:
+    - {nome: Contagem, cd_ibge: "3118601"}
+produto: setorizacao_risco
+tipologias: [Deslizamento]
+acesso:
+  tipo: arcgis_rest
+  url: https://geoprocessamento.contagem.mg.gov.br/arcgis/rest/services/Hosted/Setoriza%C3%A7%C3%A3o_de_risco_geol%C3%B3gico/FeatureServer/0
+  formato: geojson
+  crs_origem: EPSG:31983
+licenca:
+  nome: não declarada
+  url: null
+  observacao: null
+termos_uso_url: null
+robots:
+  verificado_em: "2026-11-21"
+  resultado: sem robots.txt (404)
+  crawl_delay_s: null
+frequencia_atualizacao:
+  declarada: null
+  observada: null
+ultima_verificacao: "2026-11-21"
+status: ativa
+publicar: false
+coletor: arcgis_rest
+intervalo_minimo_s: 2
+mapeamento:
+  id_original: fid
+  grau: {campo: grau_risco}
+  tipologia:
+    campo: tipologia
+    valores:
+      Deslizamentos: [[Deslizamento, Deslizamento não especificado]]
+      Deslizamentos / Rolamento de blocos: [[Deslizamento, Deslizamento não especificado], [Queda, null]]
+  data_setor: {campo: data_setor}
+  copiar: [local, descricao, obs_ocup, num_pess, sug_interv, orgao_exec]
+contato: null
+notas: >-
+  Os 28 setores são os mesmos da CPRM (num_setor MG_CO_SR_NN_CPRM). Fica no
+  catálogo como fonte espelho e caso de teste da sobreposição, sem ir para a
+  publicação (publicar: false).

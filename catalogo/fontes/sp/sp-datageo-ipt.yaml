@@ -1,0 +1,25 @@
+id: sp-datageo-ipt
+nome: Mapeamentos de risco do IPT no DataGEO
+orgao: Instituto de Pesquisas Tecnológicas (IPT) e SEMIL-SP (DataGEO)
+esfera: estadual
+abrangencia:
+  uf: SP
+produto: setorizacao_risco
+tipologias: [Deslizamento, Corrida de massa, Enxurrada]
+acesso:
+  tipo: visualizacao_web
+  url: https://datageo.ambiente.sp.gov.br/
+  formato: null
+  crs_origem: null
+licenca:
+  nome: não verificada
+  url: null
+  observacao: null
+termos_uso_url: null
+ultima_verificacao: "2026-11-21"
+status: nao_verificada
+contato: null
+notas: >-
+  Segundo a SEMIL, o DataGEO exibe centenas de camadas de risco do IPT, com os
+  dados nos servidores do próprio IPT. O portal responde, mas o serviço de
+  dados (WMS/WFS) das camadas de risco não foi localizado.

@@ -1,0 +1,16 @@
+# Grafias de município usadas pelas fontes que não batem com o nome do IBGE.
+# Formato: UF -> {nome como a fonte escreve: código IBGE}. O código precisa
+# ser da UF indicada (o catálogo confere). Só entra aqui o que foi conferido.
+
+MG:
+  # CPRM/SGB escreve "BARÃO DE MONTE ALTO"; o IBGE, "Barão do Monte Alto".
+  # É o único Monte Alto de MG.
+  BARÃO DE MONTE ALTO: "3105509"
+
+MT:
+  # CPRM/SGB: "SANTO ANTÔNIO DO LEVERGER"; IBGE: "Santo Antônio de Leverger".
+  SANTO ANTÔNIO DO LEVERGER: "5107800"
+
+RN:
+  # CPRM/SGB usa a grafia antiga "AÇU"; o IBGE adota "Assú".
+  AÇU: "2400208"

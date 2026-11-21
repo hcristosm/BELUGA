@@ -1,0 +1,49 @@
+id: br-sgb-setorizacao
+sigla: CPRM
+nome: Setorização de Risco Geológico (CPRM/SGB)
+orgao: Serviço Geológico do Brasil (SGB/CPRM)
+esfera: federal
+abrangencia:
+  uf: BR
+  nacional: true
+produto: setorizacao_risco
+tipologias: [Deslizamento, Queda, Corrida de massa, Erosão, Inundação, Enxurrada, Rastejo, Alagamento, Enchente]
+acesso:
+  tipo: arcgis_rest
+  url: https://geoportal.sgb.gov.br/server/rest/services/gestaoterritorial/risco/FeatureServer/0
+  formato: geojson
+  crs_origem: EPSG:3857
+  parametros:
+    # Uma consulta por UF: a camada tem ~19 mil setores e o ArcGIS da SGB
+    # derruba consultas longas (ver ORCA, runs #23 e #29).
+    particionar_por_uf: true
+    campo_uf: uf
+licenca:
+  nome: não declarada no serviço
+  url: null
+  observacao: dado público federal; o serviço ArcGIS não traz texto de licença
+termos_uso_url: null
+robots:
+  verificado_em: "2026-11-21"
+  resultado: sem robots.txt (404)
+  crawl_delay_s: null
+frequencia_atualizacao:
+  declarada: null
+  observada: campanhas de campo contínuas; em 2026-11 a camada foi republicada com objectid renumerado, campo `municipio` no lugar de `munic` e sem `cd_geocmu`
+ultima_verificacao: "2026-11-21"
+status: ativa
+coletor: arcgis_rest
+intervalo_minimo_s: 2
+mapeamento:
+  id_original: objectid
+  num_setor: {campo: num_setor}
+  uf: {campo: uf}
+  municipio: {campo: municipio, remover_sufixo_uf: true}
+  grau: {campo: grau_risco}
+  data_setor: {campo: data_setor}
+  tipologia: {copiar_colunas_cprm: true}
+  copiar: [local, descricao, obs_ocup, grau_vulne, num_edif, num_domi, num_pess, sug_interv, orgao_exec]
+contato: null
+notas: >-
+  Base que o ORCA usa hoje. O BELUGA guarda a cópia normalizada para o ORCA
+  poder puxar todos os setores (CPRM e demais fontes) de um lugar só.

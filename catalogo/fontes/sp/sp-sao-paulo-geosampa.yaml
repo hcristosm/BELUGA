@@ -1,0 +1,28 @@
+id: sp-sao-paulo-geosampa
+nome: Risco Geológico do município de São Paulo (GeoSampa)
+orgao: Prefeitura de São Paulo (Defesa Civil e SMUL)
+esfera: municipal
+abrangencia:
+  uf: SP
+  municipios:
+    - {nome: São Paulo, cd_ibge: "3550308"}
+produto: setorizacao_risco
+tipologias: [Deslizamento]
+acesso:
+  tipo: visualizacao_web
+  url: https://geosampa.prefeitura.sp.gov.br/
+  formato: null
+  crs_origem: null
+licenca:
+  nome: não verificada
+  url: null
+  observacao: null
+termos_uso_url: null
+ultima_verificacao: "2026-11-21"
+status: nao_verificada
+contato: null
+notas: >-
+  A prefeitura cita a camada "Risco Geológico" (setores R1 a R4, mapeamento do
+  IPT de 2010 atualizado até 2022) com download e WFS no GeoSampa. Em
+  2026-11-21 os servidores do GeoSampa fecharam a conexão TLS vinda do BELUGA,
+  então o endpoint e o nome da camada não foram confirmados.

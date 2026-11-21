@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BELUGA · Visualizador de setores</title>
+<meta name="description" content="Setores de risco geológico agregados pelo BELUGA: CPRM/SGB e fontes estaduais e municipais.">
+<link rel="icon" href="img/beluga-32.png" sizes="32x32">
+<link rel="icon" href="img/beluga-192.png" sizes="192x192">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<aside id="painel" aria-label="Filtros e fontes">
+  <header class="topo">
+    <img src="img/beluga-192.png" alt="" width="44" height="44">
+    <div>
+      <h1>BELUGA</h1>
+      <p class="sub">Visualizador de setores de risco</p>
+    </div>
+    <button id="recolher" class="so-celular" aria-expanded="true" aria-controls="conteudo-painel">Filtros</button>
+  </header>
+
+  <div id="conteudo-painel">
+    <p id="estado" class="estado" role="status">Carregando manifest…</p>
+
+    <nav class="abas" role="tablist">
+      <button role="tab" aria-selected="true" data-aba="aba-mapa">Mapa</button>
+      <button role="tab" aria-selected="false" data-aba="aba-catalogo">Catálogo</button>
+      <button role="tab" aria-selected="false" data-aba="aba-validacao">Validação</button>
+    </nav>
+
+    <section id="aba-mapa" class="aba" role="tabpanel">
+      <label class="campo">UF
+        <select id="uf"></select>
+      </label>
+      <label class="campo">Município
+        <input id="municipio" list="lista-municipios" placeholder="Digite para ir ao município" autocomplete="off">
+        <datalist id="lista-municipios"></datalist>
+      </label>
+
+      <fieldset>
+        <legend>Colorir por</legend>
+        <label><input type="radio" name="cor" value="fonte" checked> fonte</label>
+        <label><input type="radio" name="cor" value="grau"> grau de risco</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Fontes</legend>
+        <div id="filtro-fontes" class="lista-filtro"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Grau</legend>
+        <div id="filtro-graus" class="lista-filtro"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Relação com a CPRM</legend>
+        <label><input type="radio" name="sob" value="todos" checked> todos</label>
+        <label><input type="radio" name="sob" value="sim"> só os que sobrepõem setor da CPRM</label>
+        <label><input type="radio" name="sob" value="nao"> só os sem setor da CPRM</label>
+      </fieldset>
+
+      <p id="contagem" class="contagem"></p>
+
+      <details class="local">
+        <summary>Abrir um GeoJSON local</summary>
+        <p>Para conferir um arquivo sem servidor (por exemplo, um <code>setores_&lt;uf&gt;.geojson</code> baixado).</p>
+        <input id="arquivo-local" type="file" accept=".geojson,.json,application/geo+json">
+      </details>
+    </section>
+
+    <section id="aba-catalogo" class="aba" role="tabpanel" hidden>
+      <div id="catalogo"></div>
+    </section>
+
+    <section id="aba-validacao" class="aba" role="tabpanel" hidden>
+      <div id="validacao"></div>
+    </section>
+
+    <footer class="rodape">
+      <a id="link-manifest" href="v1/manifest.json">manifest.json</a> ·
+      <a href="https://github.com/hcristosm/BELUGA">código</a> ·
+      dados sob a licença de cada fonte
+    </footer>
+  </div>
+</aside>
+
+<main id="mapa" aria-label="Mapa dos setores"></main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="visualizador.js"></script>
+</body>
+</html>

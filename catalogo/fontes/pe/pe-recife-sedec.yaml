@@ -1,0 +1,55 @@
+id: pe-recife-sedec
+sigla: PCR
+nome: Áreas de Risco da Regional Sul do Recife
+orgao: Secretaria Executiva de Defesa Civil do Recife (Sedec), Prefeitura do Recife
+esfera: municipal
+abrangencia:
+  uf: PE
+  municipios:
+    - {nome: Recife, cd_ibge: "2611606"}
+produto: ponto_risco
+tipologias: []
+acesso:
+  tipo: arquivo
+  url: https://dados.recife.pe.gov.br/dataset/c1d733d9-5867-481e-9c18-5fe572300ab2/resource/ec18759d-fac2-445e-ae72-af9d9210b831/download/coordenadas-geograficas-da-regiao-sul.geojson
+  pagina: https://dados.recife.pe.gov.br/dataset/defesa-civil
+  formato: geojson
+  crs_origem: EPSG:4326
+licenca:
+  nome: Open Data Commons Open Database License (ODbL)
+  url: https://opendatacommons.org/licenses/odbl/
+  observacao: compartilha-igual; o derivado publicado pelo BELUGA também fica sob ODbL
+termos_uso_url: null
+robots:
+  verificado_em: "2026-11-21"
+  resultado: "permite /dataset/; proíbe /api/; Crawl-Delay: 10"
+  crawl_delay_s: 10
+frequencia_atualizacao:
+  declarada: null
+  observada: recurso criado em 2026-03-02
+ultima_verificacao: "2026-11-21"
+status: ativa
+coletor: arquivo
+intervalo_minimo_s: 10
+mapeamento:
+  # O arquivo não tem identificador; o id sai do endereço e da coordenada.
+  id_original: {gerar_de: [Endereço, Latitude, Longitude]}
+  grau:
+    campo: Descrição
+    valores:
+      Área de Risco Nível 4: Muito alto
+      Área de Risco Nível 3: Alto
+      Área de Risco Nível 2: Médio
+      Área de Risco Nível 1: Baixo
+      # Valores que o arquivo traz e não dizem o grau:
+      Ponto de Colocação de Lona: null
+      Não Informado: null
+      Deslizamento: null
+  campos:
+    local: "{Localidade}, {Bairro}"
+    descricao: "{Endereço}"
+contato: null
+notas: >-
+  São pontos (imóveis/endereços), não polígonos, e só da Regional Sul. A
+  correspondência entre "Nível N" e os graus R1 a R4 da CPRM é suposição do
+  BELUGA; o arquivo não traz tipologia. A CPRM não tem setores no Recife.

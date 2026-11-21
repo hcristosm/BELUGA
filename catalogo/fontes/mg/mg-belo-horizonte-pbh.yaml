@@ -1,0 +1,53 @@
+id: mg-belo-horizonte-pbh
+sigla: PBH
+nome: Área de Risco Geológico de Belo Horizonte
+orgao: Prefeitura de Belo Horizonte (publicação Prodabel; estudo UFMG 1996 e Sudecap)
+esfera: municipal
+abrangencia:
+  uf: MG
+  municipios:
+    - {nome: Belo Horizonte, cd_ibge: "3106200"}
+produto: area_risco_sem_grau
+tipologias: [Inundação, Deslizamento, Erosão, Outros]
+acesso:
+  tipo: arquivo
+  url: https://ckan.pbh.gov.br/dataset/303d0e6a-dca9-41e8-b4cb-289dc5297615/resource/a5846209-2281-462b-9a49-94d56769497e/download/20250102_area_risco_geologico.csv
+  pagina: https://dados.pbh.gov.br/dataset/area-risco-geologico
+  formato: csv_wkt
+  crs_origem: EPSG:31983
+  parametros:
+    separador: ";"
+    coluna_geometria: GEOMETRIA
+licenca:
+  nome: Creative Commons Atribuição
+  url: null
+  observacao: licença declarada no portal de dados abertos da PBH
+termos_uso_url: null
+robots:
+  verificado_em: "2026-11-21"
+  resultado: permite (bloqueia só /datastore/dump/ e */resource/*/view/)
+  crawl_delay_s: null
+frequencia_atualizacao:
+  declarada: eventual
+  observada: recurso de 2025-01-02; o estudo de origem é de 1996
+ultima_verificacao: "2026-11-21"
+status: ativa
+coletor: arquivo
+intervalo_minimo_s: 2
+mapeamento:
+  id_original: ID_ARG
+  tipologia:
+    campo: RISCO_GEOLOGICO
+    valores:
+      RISCO INUNDAÇÕES: [[Inundação, null]]
+      RISCO DE ESCORREGAMENTO: [[Deslizamento, Deslizamento não especificado]]
+      RISCO DE EROSÃO E ASSOREAMENTO: [[Erosão, null]]
+      RISCO ASSOCIADO A ESCAVAÇÕES: [[Outros, null]]
+      RISCO DE CONTAMINAÇÃO DO LENÇOL FREÁTICO: [[Outros, null]]
+  campos:
+    descricao: "{RISCO_GEOLOGICO}"
+contato: null
+notas: >-
+  Não é setorização: são áreas com tendência a risco geológico mapeadas em
+  1996, sem grau. A CPRM não tem setores em Belo Horizonte. A setorização
+  atual é da Urbel e não foi encontrada em dado aberto.

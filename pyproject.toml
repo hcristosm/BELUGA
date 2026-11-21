@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=84.2.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "beluga"
+version = "0.1.0"
+description = "Catálogo e base padronizada de setores de risco geológico do Brasil (CPRM/SGB e fontes estaduais e municipais)"
+requires-python = ">=3.11"
+license = "AGPL-3.0-or-later"
+license-files = ["LICENSE"]
+dependencies = [
+    "geopandas>=1.2.0",
+    "shapely>=2.2.0",
+    "requests>=2.34.2",
+    "typer>=0.27.3",
+    "pyyaml>=6.0.2",
+    "jsonschema>=4.25.0",
+]
+
+[project.scripts]
+beluga = "src.cli:app"
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.2.0",
+    "responses>=0.26.3",
+    "ruff>=0.17.3",
+    "mypy>=2.4.1",
+    "bandit>=1.9.4",
+    "types-requests",
+    "types-PyYAML",
+    "types-jsonschema",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+ignore = [
+    "B008", # typer.Option(...) in argument defaults is the required typer pattern
+]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]

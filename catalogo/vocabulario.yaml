@@ -1,0 +1,57 @@
+# Vocabulário controlado do BELUGA. Graus e tipologias seguem a setorização da
+# CPRM/SGB (campos grau_risco, tipolo_g* e tipolo_e*), conferidos na camada
+# pública em 2026-11-21, para os setores de outras fontes encaixarem no ORCA.
+
+graus:
+  - Muito alto
+  - Alto
+  - Médio
+  - Baixo
+
+# tipolo_g*: processo geral
+tipologias:
+  - Deslizamento
+  - Queda
+  - Tombamento
+  - Rastejo
+  - Corrida de massa
+  - Subsidência
+  - Colapso
+  - Expansão/Contração de argilas
+  - Erosão
+  - Inundação
+  - Enxurrada
+  - Enchente
+  - Alagamento
+  - Outros
+
+# tipolo_e*: processo específico
+tipologias_especificas:
+  - Deslizamento planar
+  - Deslizamento rotacional
+  - Deslizamento em cunha
+  - Deslizamento não especificado
+  - Queda de blocos
+  - Queda de lascas
+  - Corrida de detritos
+  - Corrida de solo/lama
+  - Ravina
+  - Voçoroca
+  - Erosão laminar
+  - Erosão de margem fluvial
+  - Erosão costeira/marinha
+  - Erosão flúvio-marinha
+  - Terras caídas
+
+status:
+  ativa: coletada e publicada a cada execução
+  quebrada: o acesso existia e parou de responder ou mudou de formato
+  sem_dados_abertos: o órgão mantém o mapeamento, mas não publica dado vetorial aberto
+  precisa_contato: só dá para avançar pedindo os dados ou a licença ao órgão
+  nao_verificada: indício de que a fonte existe, sem acesso confirmado pelo BELUGA
+
+produtos:
+  setorizacao_risco: setores delimitados em campo com grau de risco (padrão CPRM, R1 a R4)
+  area_risco_sem_grau: áreas de risco delimitadas sem graduação
+  ponto_risco: pontos (imóveis, endereços) classificados como risco
+  suscetibilidade: mapa de suscetibilidade, não é setorização

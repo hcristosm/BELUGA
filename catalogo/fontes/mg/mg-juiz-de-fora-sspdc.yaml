@@ -1,0 +1,61 @@
+id: mg-juiz-de-fora-sspdc
+sigla: PJF
+nome: Setores de risco geológico de Juiz de Fora
+orgao: Subsecretaria de Proteção e Defesa Civil (SSPDC), Prefeitura de Juiz de Fora
+esfera: municipal
+abrangencia:
+  uf: MG
+  municipios:
+    - {nome: Juiz de Fora, cd_ibge: "3136702"}
+produto: setorizacao_risco
+tipologias: [Deslizamento, Queda]
+acesso:
+  tipo: arcgis_rest
+  # O SISURB publica uma versão por serviço (risco_geologico_2025_08,
+  # risco_geologico_2026_02_2...). Trocar a URL quando sair versão nova.
+  url: https://sisurb.pjf.mg.gov.br/server/rest/services/SISURB_dcivil/risco_geologico_2026_02_2/MapServer/0
+  formato: geojson
+  crs_origem: EPSG:31983
+licenca:
+  nome: não declarada
+  url: null
+  observacao: "o serviço traz apenas o crédito 'Defesa Civil.'; confirmar os termos com a prefeitura"
+termos_uso_url: null
+robots:
+  verificado_em: "2026-11-21"
+  resultado: sem robots.txt (404)
+  crawl_delay_s: null
+frequencia_atualizacao:
+  declarada: null
+  observada: versões 2025_08 e 2026_02 no servidor
+ultima_verificacao: "2026-11-21"
+status: ativa
+coletor: arcgis_rest
+intervalo_minimo_s: 2
+mapeamento:
+  id_original: IDENTIDADE
+  grau:
+    campo: RISCO
+    valores: {R4: Muito alto, R3: Alto, R2: Médio, R1: Baixo}
+  tipologia:
+    campo: PROCESSO
+    valores:
+      Deslizamento Planar: [[Deslizamento, Deslizamento planar]]
+      Escorregamento Planar: [[Deslizamento, Deslizamento planar]]
+      Escorregamento: [[Deslizamento, Deslizamento não especificado]]
+      Escorregamento de Solo: [[Deslizamento, Deslizamento não especificado]]
+      Queda de Blocos: [[Queda, Queda de blocos]]
+      Rolamento de Blocos Rochosos: [[Queda, null]]
+      Rolamento de Blocos e Escorregamento Planar: [[Queda, null], [Deslizamento, Deslizamento planar]]
+      "Escorregamento Planar e Queda, Rolamento, Tombamento de Blocos Rochosos": [[Deslizamento, Deslizamento planar], [Queda, null], [Tombamento, null]]
+  campos:
+    local: "{BAIRRO}"
+    descricao: "Setor {NOME_SETOR}. Origem do mapeamento: {ORIGEM_MAP}"
+    num_edif: NO_EDIFICA
+    num_pess: POPULACAO
+contato: null
+notas: >-
+  A CPRM tem 80 setores em Juiz de Fora; esta fonte tem 994, de R1 a R4,
+  compilados pela SSPDC a partir de mapeamentos próprios, da CPRM (2017) e
+  do PMRR (2007). O campo ORIGEM_MAP traz o ano, não a data, por isso
+  data_setor fica vazio.

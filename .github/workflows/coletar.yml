@@ -1,0 +1,151 @@
+name: Coletar e publicar setores
+
+# Coleta mensal: setor de risco muda em escala de meses e as fontes são
+# servidores públicos que não devem ser consultados à toa. Roda às 03:00 UTC
+# do dia 1, antes do ingest mensal do ORCA (06:00 UTC), para o ORCA já
+# encontrar a publicação nova.
+on:
+  schedule:
+    - cron: "0 3 1 * *"
+  workflow_dispatch:
+    inputs:
+      fontes:
+        description: "Ids de fonte separados por espaço (vazio = todas as ativas)"
+        required: false
+        default: ""
+      ufs:
+        description: "UFs separadas por vírgula (vazio = todas)"
+        required: false
+        default: ""
+
+concurrency:
+  group: coletar
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  coletar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/preparar-python
+
+      - name: Baixar normalizados da coleta anterior
+        # A coleta é por partição: fonte ou UF que falhar hoje fica com o
+        # normalizado do mês passado, que vem desta branch. Ausência é a 1a
+        # execução; falha de rede é fatal, porque sem o estado anterior a
+        # guarda de queda não tem contra o que comparar.
+        uses: ./.github/actions/baixar-branch
+        with:
+          branch: dados-base
+          destino: data
+          ausente-e-fatal: "false"
+          falha-e-fatal: "true"
+
+      - name: Buscar a publicação anterior
+        id: anterior
+        uses: ./.github/actions/baixar-branch
+        with:
+          branch: gh-pages
+          ausente-e-fatal: "false"
+          falha-e-fatal: "true"
+
+      - name: Coletar e normalizar
+        id: coleta
+        # continue-on-error: uma fonte fora do ar não pode impedir a
+        # publicação das outras. O passo final reprova o job se isto falhou.
+        continue-on-error: true
+        env:
+          FONTES: ${{ inputs.fontes }}
+          UFS: ${{ inputs.ufs }}
+        run: |
+          args=()
+          for f in $FONTES; do args+=(--fonte "$f"); done
+          if [ -n "$UFS" ]; then args+=(--ufs "$UFS"); fi
+          python -m src.cli coletar --diretorio data "${args[@]}"
+
+      - name: Exportar publicação v1
+        if: "!cancelled()"
+        run: python -m src.cli exportar --diretorio data --saida docs/visualizador/v1
+
+      - name: Conferir antes de publicar
+        id: conferir
+        # Mesma guarda do ORCA (scripts/conferir_publicacao.py): recusa
+        # publicar menos setores do que já estão no ar, grava publicar=false
+        # antes de sair com 1. Na 1a execução (sem gh-pages) o anterior é 0.
+        if: "!cancelled()"
+        env:
+          DISPONIVEL: ${{ steps.anterior.outputs.disponivel }}
+        run: |
+          if [ "$DISPONIVEL" = "true" ]; then
+            git show origin/gh-pages:v1/manifest.json > manifest_anterior.json || true
+            python3 scripts/conferir_publicacao.py \
+              --atual-manifesto docs/visualizador/v1/manifest.json \
+              --anterior-manifesto manifest_anterior.json --rotulo setores
+          else
+            python3 scripts/conferir_publicacao.py \
+              --atual-manifesto docs/visualizador/v1/manifest.json --anterior 0 --rotulo setores
+          fi
+
+      - name: Preparar dados-base
+        if: "!cancelled() && steps.conferir.outputs.publicar == 'true'"
+        run: |
+          mkdir -p publicar-dados
+          cp -r data/normalizado publicar-dados/
+
+      - name: Publicar normalizados em dados-base
+        # Com histórico (sem force_orphan): se algo passar pela guarda e
+        # ainda assim estiver errado, dá para `git revert`.
+        if: "!cancelled() && steps.conferir.outputs.publicar == 'true'"
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: publicar-dados
+          publish_branch: dados-base
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_message: "chore(dados-base): atualizar setores normalizados"
+
+      - name: Publicar visualizador e dados v1 no gh-pages
+        if: "!cancelled() && steps.conferir.outputs.publicar == 'true'"
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/visualizador
+          publish_branch: gh-pages
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_message: "chore(gh-pages): publicar setores v1"
+
+      - name: Empacotar bruto e Shapefiles
+        if: "!cancelled() && steps.conferir.outputs.publicar == 'true'"
+        id: pacote
+        run: |
+          data=$(date -u +%Y-%m-%d)
+          echo "tag=dados-${data}-${GITHUB_RUN_ID}" >> "$GITHUB_OUTPUT"
+          mkdir -p release
+          (cd data && zip -qr "../release/bruto_${data}.zip" bruto)
+          cp data/release/shp/*.zip release/
+          cp docs/visualizador/v1/manifest.json release/manifest.json
+          ls -la release
+
+      - name: Criar Release de dados
+        # Release imutável por coleta: o bruto sem alteração (com sha256 no
+        # manifest de cada fonte) e os Shapefiles por UF.
+        if: "!cancelled() && steps.conferir.outputs.publicar == 'true'"
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.pacote.outputs.tag }}
+          name: Dados ${{ steps.pacote.outputs.tag }}
+          body: "Coleta automática. Contrato v1: docs/contrato-dados.md."
+          files: release/*
+
+      - name: Reprovar se alguma coleta falhou
+        # Publicação parcial é aceitável; esconder a falha, não.
+        if: "!cancelled() && steps.coleta.outcome == 'failure'"
+        run: |
+          echo "::error::Ao menos uma fonte ou UF falhou na coleta; veja o passo 'Coletar e normalizar'."
+          exit 1

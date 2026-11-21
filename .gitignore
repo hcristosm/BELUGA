@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# gerados pelo pipeline (vão para as branches dados-base e gh-pages e para as Releases)
+data/*
+!data/.gitkeep
+docs/visualizador/v1/
+
+# artefatos de ferramenta de agente, não versionados
+.superpowers/
+docs/superpowers/
+.claude/
+.agents/
+CLAUDE.md

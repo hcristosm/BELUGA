@@ -1,0 +1,32 @@
+id: rj-rio-de-janeiro-georio
+nome: Risco geológico do município do Rio de Janeiro (GEO-RIO)
+orgao: Fundação Instituto de Geotécnica do Município do Rio de Janeiro (GEO-RIO)
+esfera: municipal
+abrangencia:
+  uf: RJ
+  municipios:
+    - {nome: Rio de Janeiro, cd_ibge: "3304557"}
+produto: suscetibilidade
+tipologias: [Deslizamento]
+acesso:
+  tipo: arcgis_rest
+  url: https://pgeo3.rio.rj.gov.br/arcgis/rest/services/Geotecnia/Suscetibilidade_a_deslizamentos/MapServer
+  formato: null
+  crs_origem: null
+licenca:
+  nome: não verificada
+  url: null
+  observacao: null
+termos_uso_url: null
+robots:
+  verificado_em: "2026-11-21"
+  resultado: sem robots.txt (404)
+  crawl_delay_s: null
+ultima_verificacao: "2026-11-21"
+status: precisa_contato
+contato: null
+notas: >-
+  O ArcGIS da prefeitura (pgeo3.rio.rj.gov.br) publica a suscetibilidade a
+  deslizamentos só em raster e, na pasta Defesa_Civil, apenas pontos (sirenes,
+  pontos de apoio, NUPDEC). Não há setores de risco vetoriais abertos. A CPRM
+  não tem setores no Rio de Janeiro.

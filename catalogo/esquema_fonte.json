@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fonte do catálogo BELUGA",
+  "description": "Um arquivo YAML por fonte em catalogo/fontes/<uf>/<id>.yaml. Ver docs/catalogo.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "nome", "orgao", "esfera", "abrangencia", "produto", "tipologias",
+    "acesso", "licenca", "ultima_verificacao", "status"
+  ],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z]{2}-[a-z0-9]+(-[a-z0-9]+)*$"},
+    "sigla": {"type": "string", "pattern": "^[A-Z0-9]{2,8}$"},
+    "nome": {"type": "string", "minLength": 3},
+    "orgao": {"type": "string", "minLength": 3},
+    "esfera": {"enum": ["federal", "estadual", "municipal", "academica"]},
+    "abrangencia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uf"],
+      "properties": {
+        "uf": {"type": "string", "pattern": "^([A-Z]{2})$"},
+        "nacional": {"type": "boolean"},
+        "municipios": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["nome", "cd_ibge"],
+            "properties": {
+              "nome": {"type": "string"},
+              "cd_ibge": {"type": "string", "pattern": "^[0-9]{7}$"}
+            }
+          }
+        }
+      }
+    },
+    "produto": {"enum": ["setorizacao_risco", "area_risco_sem_grau", "ponto_risco", "suscetibilidade"]},
+    "tipologias": {"type": "array", "items": {"type": "string"}},
+    "acesso": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tipo", "url"],
+      "properties": {
+        "tipo": {"enum": ["arcgis_rest", "wfs", "arquivo", "pdf", "visualizacao_web"]},
+        "url": {"type": ["string", "null"], "pattern": "^https?://"},
+        "pagina": {"type": ["string", "null"], "pattern": "^https?://"},
+        "formato": {"enum": ["geojson", "csv_wkt", "csv_xy", null]},
+        "crs_origem": {"type": ["string", "null"], "pattern": "^EPSG:[0-9]+$"},
+        "parametros": {"type": "object"}
+      }
+    },
+    "licenca": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nome"],
+      "properties": {
+        "nome": {"type": "string"},
+        "url": {"type": ["string", "null"]},
+        "observacao": {"type": ["string", "null"]}
+      }
+    },
+    "termos_uso_url": {"type": ["string", "null"]},
+    "robots": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "verificado_em": {"type": "string", "format": "date"},
+        "resultado": {"type": "string"},
+        "crawl_delay_s": {"type": ["number", "null"]}
+      }
+    },
+    "frequencia_atualizacao": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "declarada": {"type": ["string", "null"]},
+        "observada": {"type": ["string", "null"]}
+      }
+    },
+    "ultima_verificacao": {"type": "string", "format": "date"},
+    "status": {"enum": ["ativa", "quebrada", "sem_dados_abertos", "precisa_contato", "nao_verificada"]},
+    "publicar": {"type": "boolean"},
+    "coletor": {"enum": ["arcgis_rest", "arquivo", null]},
+    "intervalo_minimo_s": {"type": "number", "minimum": 0},
+    "mapeamento": {"type": "object"},
+    "contato": {"type": ["string", "null"]},
+    "notas": {"type": ["string", "null"]}
+  },
+  "if": {"properties": {"status": {"const": "ativa"}}},
+  "then": {"required": ["coletor", "mapeamento", "sigla"]}
+}

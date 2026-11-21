@@ -175,3 +175,34 @@ def test_linhas_identicas_na_fonte_viram_uma(fonte):
     f = fazer_fonte(mapeamento=mapa)
     r = normalizar(gdf([_registro(geometry=ponto()), _registro(geometry=ponto())]), f, PROV)
     assert len(r.setores) == 1 and r.setores.iloc[0].geometry.geom_type == "Point"
+
+
+REGRAS_TEXTO = [
+    {"padrao": r"escorreg|desliz", "tipologia": ["Deslizamento", None]},
+    {"padrao": r"solapamento", "tipologia": ["Erosão", "Erosão de margem fluvial"]},
+    {"padrao": r"inunda", "tipologia": ["Inundação", None]},
+    {"padrao": r"eros", "tipologia": ["Erosão", None]},
+]
+
+
+def test_tipologia_por_palavra_chave_em_texto_livre(fonte):
+    mapa = dict(FONTE_BASE["mapeamento"], tipologia={"campo": "PROCESSO", "palavras_chave": REGRAS_TEXTO})
+    f = fazer_fonte(mapeamento=mapa)
+    texto = "Escorregamento de talude de corte, erosão e solapamento da margem; inundação das moradias"
+    r = normalizar(gdf([_registro(PROCESSO=texto)]), f, PROV)
+    s = r.setores.iloc[0]
+    # Na ordem das regras; "Erosão" entra uma vez só, pela primeira regra que casou.
+    assert (s["tipolo_g1"], s["tipolo_g2"], s["tipolo_e2"], s["tipolo_g3"], s["tipolo_g4"]) == (
+        "Deslizamento", "Erosão", "Erosão de margem fluvial", "Inundação", None)
+    assert s["bl_tipo_or"] == texto
+    assert not r.avisos
+
+
+def test_texto_sem_palavra_chave_vira_um_aviso_agregado(fonte):
+    mapa = dict(FONTE_BASE["mapeamento"], tipologia={"campo": "PROCESSO", "palavras_chave": REGRAS_TEXTO})
+    f = fazer_fonte(mapeamento=mapa)
+    registros = [_registro(ID=1, PROCESSO="Não foram observadas evidências de movimentação"),
+                 _registro(ID=2, PROCESSO="Muro atua como barramento da drenagem")]
+    r = normalizar(gdf(registros), f, PROV)
+    assert r.setores["tipolo_g1"].tolist() == [None, None]
+    assert r.avisos == {"tipologia sem palavra-chave reconhecida": 2}

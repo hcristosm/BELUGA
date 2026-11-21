@@ -95,3 +95,17 @@ def test_selecionar_recusa_fonte_inexistente_ou_inativa():
     with pytest.raises(CatalogoInvalido, match="sem status ativa"):
         selecionar(fontes, ["sp-sao-paulo-geosampa"])
     assert all(f.ativa for f in selecionar(fontes, None))
+
+
+def test_palavra_chave_invalida(tmp_path):
+    destino = _catalogo_minimo(tmp_path)
+    arquivo = destino / "mg" / "mg-juiz-de-fora-sspdc.yaml"
+    dados = yaml.safe_load(arquivo.read_text())
+    dados["mapeamento"]["tipologia"]["palavras_chave"] = [
+        {"padrao": "escorreg(", "tipologia": ["Deslizamento", None]},
+        {"padrao": "avalanche", "tipologia": ["Avalanche", None]},
+    ]
+    arquivo.write_text(yaml.safe_dump(dados, allow_unicode=True))
+    with pytest.raises(CatalogoInvalido) as exc:
+        carregar_catalogo(destino)
+    assert "padrão inválido" in str(exc.value) and "Avalanche" in str(exc.value)

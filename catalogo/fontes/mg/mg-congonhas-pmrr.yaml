@@ -1,0 +1,65 @@
+id: mg-congonhas-pmrr
+sigla: CNG
+nome: Risco geológico do Plano Municipal de Redução de Risco de Congonhas
+orgao: Prefeitura de Congonhas (ConSIG, Secretaria de Planejamento)
+esfera: municipal
+abrangencia:
+  uf: MG
+  municipios:
+    - {nome: Congonhas, cd_ibge: "3118007"}
+produto: setorizacao_risco
+tipologias: [Deslizamento, Queda, Erosão, Enxurrada, Rastejo, Inundação]
+acesso:
+  tipo: arcgis_rest
+  # Camada 1 (Risco_Geológico). A camada 0 do mesmo serviço tem 2 setores
+  # hidrológicos e a 3 é a setorização da CPRM, que já vem da própria SGB.
+  url: https://services8.arcgis.com/s4GRnqeg1etTzWrc/arcgis/rest/services/Plano_de_Redu%C3%A7%C3%A3o_de_Risco/FeatureServer/1
+  formato: geojson
+  crs_origem: EPSG:4326
+licenca:
+  nome: não declarada
+  url: null
+  observacao: "item público no ArcGIS Online com crédito 'ConSIG - Sistema de Informações Geográficas de Congonhas'"
+termos_uso_url: null
+robots:
+  verificado_em: "2026-11-21"
+  resultado: robots.txt de services8.arcgis.com responde 403 (tratado como ausente)
+  crawl_delay_s: null
+frequencia_atualizacao:
+  declarada: null
+  observada: item publicado em 2024-11, atualizado em 2025-05
+ultima_verificacao: "2026-11-21"
+status: ativa
+coletor: arcgis_rest
+intervalo_minimo_s: 2
+mapeamento:
+  id_original: SETOR
+  grau:
+    campo: GRAU
+    valores: {R4: Muito alto, R3: Alto, R2: Médio, R1: Baixo}
+  tipologia:
+    # Valores abreviados (e alguns com erro de digitação) como estão na fonte.
+    campo: PROCESSO
+    valores:
+      DESLIZAMENTO: [[Deslizamento, Deslizamento não especificado]]
+      DESÇIZAMENTO: [[Deslizamento, Deslizamento não especificado]]
+      DESLIZAMENTO  EROSÃ: [[Deslizamento, Deslizamento não especificado], [Erosão, null]]
+      DESLIZAMENTO ENX: [[Deslizamento, Deslizamento não especificado], [Enxurrada, null]]
+      DESLIZAMENTO QB: [[Deslizamento, Deslizamento não especificado], [Queda, Queda de blocos]]
+      ENXURRADA: [[Enxurrada, null]]
+      ENXURRADA DESLIZAM: [[Enxurrada, null], [Deslizamento, Deslizamento não especificado]]
+      QUEDA BLOCO / DES: [[Queda, Queda de blocos], [Deslizamento, Deslizamento não especificado]]
+      QUEDA DE BLOCO: [[Queda, Queda de blocos]]
+      QUEDA DE BLOCO / DES: [[Queda, Queda de blocos], [Deslizamento, Deslizamento não especificado]]
+      QUEDA DE BLOCO DES: [[Queda, Queda de blocos], [Deslizamento, Deslizamento não especificado]]
+      RASTEJO: [[Rastejo, null]]
+      SOLAPAMENTO: [[Erosão, Erosão de margem fluvial]]
+      SOLPAMENTO: [[Erosão, Erosão de margem fluvial]]
+      SOLAPAMENTO DES: [[Erosão, Erosão de margem fluvial], [Deslizamento, Deslizamento não especificado]]
+      SOLAPAMENTO INUND: [[Erosão, Erosão de margem fluvial], [Inundação, null]]
+  campos:
+    descricao: "Setor {ROTULO}. Processo: {PROCESSO}"
+contato: null
+notas: >-
+  73 setores de R2 a R4 do PMRR de Congonhas. A CPRM tem 24 setores no
+  município. Os atributos são só setor, grau e processo.

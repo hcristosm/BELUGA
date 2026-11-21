@@ -38,7 +38,7 @@ setores de risco, os da CPRM inclusive. O contrato entre os dois está em
 
 ## O que está publicado
 
-Coleta de 2026-11-21: **20.913 setores** em 27 UFs.
+Coleta de 2026-11-21: **21.429 setores** em 27 UFs.
 
 | Fonte | Órgão | UF | Formato de acesso | Setores | Licença |
 |---|---|---|---|---:|---|
@@ -46,12 +46,15 @@ Coleta de 2026-11-21: **20.913 setores** em 27 UFs.
 | Setores de risco geológico de Juiz de Fora | SSPDC, Prefeitura de Juiz de Fora | MG | ArcGIS REST | 994 | não declarada |
 | Área de Risco Geológico de Belo Horizonte | PBH (estudo UFMG de 1996) | MG | CSV com WKT (CKAN) | 665 | CC Atribuição |
 | Áreas de Risco da Regional Sul do Recife | Sedec, Prefeitura do Recife | PE | GeoJSON (CKAN) | 364 | ODbL |
+| Risco geológico e hidrológico de Contagem (2024) | Prefeitura de Contagem | MG | ArcGIS REST | 265 | não declarada |
+| Setores de risco de Suzano (2019) | Prefeitura de Suzano | SP | ArcGIS REST (ArcGIS Online) | 178 | não declarada |
+| Risco geológico do PMRR de Congonhas | Prefeitura de Congonhas | MG | ArcGIS REST (ArcGIS Online) | 73 | não declarada |
 
 Fontes catalogadas que **não** entram na publicação:
 
 | Fonte | Status | Motivo |
 |---|---|---|
-| Setorização de Contagem (MG) | ativa, `publicar: false` | republica os mesmos 28 setores da CPRM; serve de teste da sobreposição |
+| Setorização de Contagem (MG) | ativa, `publicar: false` | republica os mesmos 28 setores da CPRM; serve de teste da sobreposição (o levantamento próprio de Contagem de 2024 é outra fonte e é publicado) |
 | Risco geológico de São Paulo (GeoSampa) | não verificada | o servidor recusou a conexão; endpoint não confirmado |
 | Mapeamentos do IPT no DataGEO (SP) | não verificada | serviço de dados das camadas de risco não localizado |
 | GEO-RIO (Rio de Janeiro) | precisa contato | só há suscetibilidade em raster; sem setores vetoriais abertos |
@@ -65,6 +68,13 @@ Diferenças de produto que o ORCA precisa considerar:
   suposição do BELUGA, registrada no catálogo.
 - **Juiz de Fora** inclui setores de grau **Baixo** (R1), que a CPRM quase não
   publica. 151 dos 994 setores se sobrepõem a setores da CPRM.
+- **Contagem (2024)** são **pontos**, geológicos e hidrológicos, sem o processo:
+  a tipologia fica vazia e a classe ("GEOLOGICO", "HIDROLOGICO") vai em
+  `bl_tipo_or`.
+- **Suzano** tem o processo em texto livre. A tipologia é extraída por
+  palavra-chave ("escorreg" vira Deslizamento, "solapamento" vira Erosão de
+  margem fluvial); 6 dos 178 setores não citam processo reconhecível e ficam
+  sem tipologia. A CPRM não tem setores em Suzano.
 
 ## Visualizador
 
@@ -194,6 +204,8 @@ docs/
   município declarado. Estão publicados e listados no relatório de validação.
 - **A cobertura é pequena.** As capitais com maior população em área de risco
   (São Paulo, Rio de Janeiro, Salvador) ainda não têm fonte aberta confirmada.
+- **Itaguaí (RJ)** publica as áreas de risco no ArcGIS Online, mas o serviço
+  exige login; não entra até haver acesso aberto.
 
 ## Roadmap
 

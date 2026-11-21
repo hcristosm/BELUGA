@@ -75,6 +75,13 @@ mapeamento:
 - Em `tipologia.valores`, cada item é `[geral, específica]`, até 5 pares
   (`tipolo_g1` a `tipolo_g5`). Lista vazia é valor conhecido sem tipologia.
 - `tipologia: {copiar_colunas_cprm: true}` copia `tipolo_*` e `cobrade_*`.
+- Para processo em texto livre, `tipologia.palavras_chave` é uma lista de
+  regras `{padrao: <regex>, tipologia: [geral, específica]}`. Cada regra que
+  casa com o texto (sem diferenciar maiúsculas e acentos) acrescenta um par, na
+  ordem das regras; a mesma geral entra uma vez só. `valores`, se houver, tem
+  prioridade. Texto que nenhuma regra reconhece fica sem tipologia e conta no
+  aviso agregado "tipologia sem palavra-chave reconhecida". Exemplo em
+  `catalogo/fontes/sp/sp-suzano-defesa-civil.yaml`.
 
 ## Como adicionar uma fonte
 

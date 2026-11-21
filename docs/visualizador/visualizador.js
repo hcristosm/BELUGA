@@ -75,7 +75,7 @@
   const GRUPOS = [
     ["Setor", ["num_setor", "bl_num_or", "munic", "cd_geocmu", "uf", "local", "data_setor"]],
     ["Risco", ["grau_risco", "bl_grau_or", "grau_vulne", "tipolo_g1", "tipolo_e1", "tipolo_g2", "tipolo_e2",
-      "tipolo_g3", "tipolo_e3", "cobrade_01", "bl_tipo_or", "descricao", "num_edif", "num_domi", "num_pess",
+      "tipolo_g3", "tipolo_e3", "tipolo_g4", "tipolo_e4", "tipolo_g5", "tipolo_e5", "cobrade_01", "bl_tipo_or", "descricao", "num_edif", "num_domi", "num_pess",
       "sug_interv"]],
     ["Relação com a CPRM", ["bl_sob_cp", "bl_cp_frac", "bl_cp_set"]],
     ["Proveniência", ["bl_fonte", "orgao_exec", "bl_id_orig", "bl_produto", "bl_licenca", "bl_coleta",
@@ -85,7 +85,8 @@
     num_setor: "código", bl_num_or: "código na fonte", munic: "município", local: "local", descricao: "descrição", cd_geocmu: "cód. IBGE", data_setor: "data do setor",
     grau_risco: "grau", bl_grau_or: "grau na fonte", grau_vulne: "vulnerabilidade",
     tipolo_g1: "tipologia", tipolo_e1: "específica", tipolo_g2: "tipologia 2", tipolo_e2: "específica 2",
-    tipolo_g3: "tipologia 3", tipolo_e3: "específica 3", cobrade_01: "COBRADE", bl_tipo_or: "tipologia na fonte",
+    tipolo_g3: "tipologia 3", tipolo_e3: "específica 3", tipolo_g4: "tipologia 4", tipolo_e4: "específica 4",
+    tipolo_g5: "tipologia 5", tipolo_e5: "específica 5", cobrade_01: "COBRADE", bl_tipo_or: "tipologia na fonte",
     num_edif: "edificações", num_domi: "domicílios", num_pess: "pessoas", sug_interv: "intervenção sugerida",
     bl_sob_cp: "sobrepõe CPRM", bl_cp_frac: "fração coberta", bl_cp_set: "setores CPRM",
     bl_fonte: "fonte", orgao_exec: "órgão", bl_id_orig: "id na fonte", bl_produto: "produto",

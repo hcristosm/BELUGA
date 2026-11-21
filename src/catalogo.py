@@ -9,6 +9,7 @@ tipologias e graus dentro do vocabulário.
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
@@ -199,6 +200,19 @@ def _erros_semanticos(fonte: Fonte, arquivo: Path) -> list[str]:
                 erros.append(f"tipologia {original!r} → {especifica!r} fora do vocabulário")
         if len(pares) > 5:
             erros.append(f"tipologia {original!r}: a CPRM só tem 5 pares (tipolo_g1..g5)")
+    for regra in tipologia.get("palavras_chave") or []:
+        if not isinstance(regra, dict) or set(regra) != {"padrao", "tipologia"}:
+            erros.append("palavras_chave: cada regra é {padrao, tipologia: [geral, específica]}")
+            continue
+        try:
+            re.compile(regra["padrao"])
+        except re.error as exc:
+            erros.append(f"palavras_chave: padrão inválido {regra['padrao']!r}: {exc}")
+        geral, especifica = (list(regra["tipologia"]) + [None, None])[:2]
+        if geral not in voc["tipologias"]:
+            erros.append(f"palavras_chave {regra['padrao']!r} → {geral!r} fora do vocabulário")
+        if especifica is not None and especifica not in voc["tipologias_especificas"]:
+            erros.append(f"palavras_chave {regra['padrao']!r} → {especifica!r} fora do vocabulário")
 
     if fonte.ativa and not fonte.nacional and len(fonte.municipios) != 1 and "municipio" not in mapeamento:
         erros.append("fonte ativa com mais de um município precisa de mapeamento.municipio")

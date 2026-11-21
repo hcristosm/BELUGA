@@ -113,6 +113,25 @@ def _data_iso(valor: Any) -> str | None:
     return None if pd.isna(data) else data.strftime("%Y-%m-%d")
 
 
+def tipologias_por_palavra_chave(
+    texto: str, regras: list[tuple[re.Pattern[str], list[str | None]]],
+) -> list[list[str | None]]:
+    """Pares [geral, específica] das regras que casam com `texto`, na ordem das
+    regras (a primeira é a principal). Uma geral só entra uma vez; no máximo 5,
+    como tipolo_g1..g5. Acento é ignorado: 'eros' casa 'Erosão'."""
+    sem_acento = unicodedata.normalize("NFKD", texto).encode("ascii", "ignore").decode()
+    pares: list[list[str | None]] = []
+    vistos: set[str | None] = set()
+    for padrao, (geral, especifica) in regras:
+        if geral in vistos or not padrao.search(sem_acento):
+            continue
+        vistos.add(geral)
+        pares.append([geral, especifica])
+        if len(pares) == 5:
+            break
+    return pares
+
+
 def _aplicar_modelo(modelo: str, linha: pd.Series) -> str | None:
     if "{" not in modelo:
         return _limpar(linha.get(modelo))
@@ -223,11 +242,23 @@ def normalizar(bruto: gpd.GeoDataFrame, fonte: Fonte, prov: Proveniencia) -> Res
         originais = _valores(bruto, regra_tip["campo"])
         saida["bl_tipo_or"] = originais
         tabela_tip = regra_tip.get("valores") or {}
+        regras = [
+            (re.compile(r["padrao"], re.IGNORECASE), r["tipologia"])
+            for r in regra_tip.get("palavras_chave") or []
+        ]
         for idx, original in originais.items():
-            pares = tabela_tip.get(original) if original else None
-            if original and original not in tabela_tip:
+            if not original:
+                continue
+            if original in tabela_tip:
+                pares = tabela_tip[original]
+            elif regras:
+                pares = tipologias_por_palavra_chave(original, regras)
+                if not pares:
+                    avisos["tipologia sem palavra-chave reconhecida"] += 1
+            else:
+                pares = []
                 avisos[f"tipologia sem correspondência: {original!r}"] += 1
-            for i, (geral, especifica) in enumerate(pares or [], start=1):
+            for i, (geral, especifica) in enumerate(pares, start=1):
                 saida.at[idx, f"tipolo_g{i}"] = geral
                 saida.at[idx, f"tipolo_e{i}"] = especifica
 

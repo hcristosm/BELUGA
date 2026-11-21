@@ -1,0 +1,63 @@
+id: sp-suzano-defesa-civil
+sigla: SUZ
+nome: Setores de risco de Suzano (2019)
+orgao: Prefeitura de Suzano (INFODATA Suzano)
+esfera: municipal
+abrangencia:
+  uf: SP
+  municipios:
+    - {nome: Suzano, cd_ibge: "3552502"}
+produto: setorizacao_risco
+tipologias: [Deslizamento, Erosão, Inundação, Alagamento, Enxurrada]
+acesso:
+  tipo: arcgis_rest
+  url: https://services8.arcgis.com/q05L6PnVEyBJZq9L/arcgis/rest/services/Setores_de_risco_2019/FeatureServer/0
+  formato: geojson
+  crs_origem: EPSG:3857
+licenca:
+  nome: não declarada
+  url: null
+  observacao: camada pública no ArcGIS Online da prefeitura, sem texto de licença
+termos_uso_url: null
+robots:
+  verificado_em: "2026-11-21"
+  resultado: robots.txt de services8.arcgis.com responde 403 (tratado como ausente)
+  crawl_delay_s: null
+frequencia_atualizacao:
+  declarada: null
+  observada: setorização de 2019; atributos de serviços executados atualizados até 2025
+ultima_verificacao: "2026-11-21"
+status: ativa
+coletor: arcgis_rest
+intervalo_minimo_s: 2
+mapeamento:
+  id_original: objectid_1
+  grau:
+    campo: grau
+    valores: {R4: Muito alto, R3: Alto, R2: Médio, R1: Baixo}
+  tipologia:
+    # O processo é texto livre (cerca de 140 frases); a tipologia sai por
+    # palavra-chave, na ordem abaixo. O texto original fica em bl_tipo_or.
+    campo: processo
+    palavras_chave:
+      - {padrao: "escorreg|desliz", tipologia: [Deslizamento, null]}
+      - {padrao: "solapamento", tipologia: [Erosão, Erosão de margem fluvial]}
+      - {padrao: "inunda", tipologia: [Inundação, null]}
+      - {padrao: "alagamento", tipologia: [Alagamento, null]}
+      - {padrao: "enchente", tipologia: [Enchente, null]}
+      - {padrao: "enxurrada", tipologia: [Enxurrada, null]}
+      - {padrao: "rolamento de bloco|queda de bloco", tipologia: [Queda, Queda de blocos]}
+      - {padrao: "corrida", tipologia: [Corrida de massa, null]}
+      - {padrao: "erosao", tipologia: [Erosão, null]}
+  campos:
+    local: "{area}, {bairro}"
+    descricao: "Setor {codareas_1}. {processo}"
+    obs_ocup: diagnostic
+    num_edif: edificacoe
+    num_pess: pessoas_ri
+    sug_interv: recomendac
+contato: null
+notas: >-
+  178 setores de R1 a R4 da Defesa Civil de Suzano. A CPRM não tem setores em
+  Suzano. A camada traz o ano (2019) no nome, não a data de cada setor, por
+  isso data_setor fica vazio.

@@ -28,7 +28,7 @@ baixar:
 | `setores.parquet` (país) | 20,5 MB |
 | `setores.csv` (país) | 25,8 MB |
 | `setores.gpkg` (país) | 61,3 MB |
-| `setores.pmtiles` (país) | 77,3 MB, lido por faixa de bytes, não baixado inteiro |
+| `setores.pmtiles` (país) | 62,5 MB, lido por faixa de bytes, não baixado inteiro |
 | `setores_mg.geojson` (maior UF) | 21,8 MB |
 | `setores_mg.zip` (Shapefile) | 5,4 MB |
 

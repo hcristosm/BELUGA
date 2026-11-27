@@ -26,8 +26,9 @@ USER_AGENT = f"BELUGA/{__version__} (+https://github.com/hcristosm/BELUGA)"
 
 # URLs estáveis da publicação, documentadas em docs/usar-os-dados.md e
 # repetidas no manifest para o consumidor não ter de montá-las.
-# O Pages serve requisição Range com CORS, que o PMTiles exige; a Release
-# aceita arquivo acima de 100 MiB, que o git recusa.
+# O Pages serve requisição Range com CORS, que o PMTiles exige. A Release não
+# é objeto git: não pesa no histórico da branch e aceita arquivo acima do
+# limite de 100 MiB do git.
 URL_PAGES = f"https://hcristosm.github.io/BELUGA/{VERSAO_CONTRATO}/"
 URL_RELEASE = "https://github.com/hcristosm/BELUGA/releases/latest/download/"
 

@@ -40,8 +40,9 @@ branch `gh-pages`, pasta raiz).
 
 Só isto vai para o Pages. O `gh-pages` guarda histórico, então cada megabyte
 publicado ali fica no repositório para sempre, e o git recusa arquivo acima de
-100 MiB. Vai para o Pages o que precisa de URL servida com CORS: o contrato v1
-e o PMTiles, que é lido por requisição Range. Os agregados nacionais
+100 MiB. Vai para o Pages apenas o que precisa de URL servida com CORS: o
+contrato v1 e o PMTiles, que é lido por requisição Range. Os agregados
+nacionais
 (`setores.gpkg`, `setores.parquet`, `setores.csv`) e os Shapefiles por UF vão
 para a Release.
 

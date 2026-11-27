@@ -9,19 +9,15 @@ O projeto segue [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
-### FIXES
-- fix(export): o PMTiles publicado era MBTiles. O tippecanoe escolhe o formato de saída pela extensão do arquivo, e o temporário da escrita atômica terminava em `.tmp`, então ele gravou SQLite com nome `.pmtiles`, saiu com 0 e o arquivo foi para o ar com tamanho plausível e conteúdo que nenhum leitor de PMTiles abre. O temporário passa a manter a extensão `.pmtiles`, e a exportação confere a assinatura `PMTiles\x03` do arquivo gerado antes de aceitá-lo, porque o formato é decidido por ferramenta externa e extensão não é prova
-- fix(export): o PMTiles passa `-n` e `-N` ao tippecanoe. Sem eles, o `name` e o `description` do metadata publicado vinham do nome do arquivo de saída, ou seja, levavam o caminho do temporário
-
 ## [1.0.0] - 2026-11-27
 
 Primeira publicação do BELUGA: **21.429 setores em 27 UFs**, de 7 fontes, com
-as 34 partições coletadas sem falha. Tamanhos medidos nesta coleta:
-`setores.pmtiles` 77,3 MB, `setores.gpkg` 61,3 MB, `setores.csv` 25,8 MB,
-`setores.parquet` 20,5 MB, e 158 MB em `v1/` no total.
+as 34 partições coletadas sem falha. Tamanhos medidos: `setores.pmtiles`
+62,5 MB, `setores.gpkg` 61,3 MB, `setores.csv` 25,8 MB, `setores.parquet`
+20,5 MB, e 143 MB em `v1/` no total.
 
 ### FEATURES
-- feat(export): GeoPackage, GeoParquet e CSV nacionais, e PMTiles do país inteiro, além do GeoJSON e do Shapefile por UF. Cada arquivo entra no `manifest.json` com tamanho, sha256 e URL estável, na chave nova `arquivos`. O PMTiles fica no Pages, porque é lido por requisição Range e precisa de CORS; os agregados vão para a Release, porque o `gh-pages` guarda histórico e o git recusa arquivo acima de 100 MiB
+- feat(export): GeoPackage, GeoParquet e CSV nacionais, e PMTiles do país inteiro, além do GeoJSON e do Shapefile por UF. Cada arquivo entra no `manifest.json` com tamanho, sha256 e URL estável, na chave nova `arquivos`. O PMTiles fica no Pages, porque é lido por requisição Range e precisa de CORS; os agregados vão para a Release, porque o `gh-pages` guarda histórico e cada megabyte publicado ali fica no repositório para sempre
 - feat(export): `exportar` recusa gerar a publicação quando o PMTiles foi pedido e o `tippecanoe` não está no PATH, em vez de publicar sem os tiles. Quem não tem a ferramenta passa `--sem-pmtiles` de propósito. As opções `--sem-agregados` e `--sem-pmtiles` acompanham as `--sem-malha` e `--sem-shapefile` que já existiam
 - feat(ci): o workflow de coleta instala o `tippecanoe` e anexa os agregados nacionais à Release de dados. A Release de dados passa a ser a `latest`, e a de código deixa de ser, para `releases/latest/download/` resolver sempre para a coleta mais recente
 - docs: `docs/usar-os-dados.md`, para quem consome: o que tem, as URLs de cada formato, como conferir o sha256, exemplos em QGIS, Python com geopandas, DuckDB, R com sf e MapLibre com PMTiles, as licenças por fonte e o versionamento. Mais `CITATION.cff`, validado contra o esquema 1.2.0
@@ -41,6 +37,8 @@ as 34 partições coletadas sem falha. Tamanhos medidos nesta coleta:
 - feat(ci): workflow mensal de coleta e publicação (dados-base, gh-pages e Release de dados) com a guarda anti-regressão do ORCA, e CI com ruff, mypy, bandit, catálogo e pytest
 
 ### FIXES
+- fix(export): o PMTiles publicado era MBTiles. O tippecanoe escolhe o formato de saída pela extensão do arquivo, e o temporário da escrita atômica terminava em `.tmp`, então ele gravou SQLite com nome `.pmtiles`, saiu com 0 e o arquivo foi para o ar com tamanho plausível e conteúdo que nenhum leitor de PMTiles abre. O temporário passa a manter a extensão `.pmtiles`, e a exportação confere a assinatura `PMTiles\x03` do arquivo gerado antes de aceitá-lo, porque o formato é decidido por ferramenta externa e extensão não é prova
+- fix(export): o PMTiles passa `-n` e `-N` ao tippecanoe. Sem eles, o `name` e o `description` do metadata publicado vinham do nome do arquivo de saída, ou seja, levavam o caminho do temporário
 - fix(ci): o manifest anexado a cada Release de dados passa a apontar para a tag daquela coleta, não para `releases/latest/download/`. Release é imutável, e o ponteiro móvel entregaria, no mês seguinte, arquivo cujo sha256 não bate com o manifest que a pessoa está lendo
 - fix(ci): a Release de dados só é criada se o empacotamento passou. A condição era `!cancelled()`, que é verdadeiro depois de um passo que falhou, então um `cp` que falhasse criaria uma Release incompleta com `make_latest: true`, e as URLs documentadas dariam 404 por um mês sem nenhuma guarda recusar
 - fix(ci): `scripts/empacotar_release.py` copia exatamente o que o manifest lista e reprova se faltar algum arquivo, com teste. Era `cp` em glob, que não conferia nada. Um passo novo confere pela API que `releases/latest` é mesmo a Release de dados, porque input desconhecido em `with:` só gera warning no Actions

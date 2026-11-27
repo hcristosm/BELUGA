@@ -19,10 +19,17 @@ VISUALIZADOR_DIR = RAIZ_PROJETO / "docs" / "visualizador"
 # Versão MAIOR do contrato de dados com o ORCA. Vai no caminho publicado
 # (`/v1/`); mudança incompatível sobe para `/v2/` (ver docs/contrato-dados.md).
 VERSAO_CONTRATO = "v1"
-VERSAO_ESQUEMA = "1.0.0"
+VERSAO_ESQUEMA = "1.1.0"
 PUBLICACAO_DIR = VISUALIZADOR_DIR / VERSAO_CONTRATO
 
 USER_AGENT = f"BELUGA/{__version__} (+https://github.com/hcristosm/BELUGA)"
+
+# URLs estáveis da publicação, documentadas em docs/usar-os-dados.md e
+# repetidas no manifest para o consumidor não ter de montá-las.
+# O Pages serve requisição Range com CORS, que o PMTiles exige; a Release
+# aceita arquivo acima de 100 MiB, que o git recusa.
+URL_PAGES = f"https://hcristosm.github.io/BELUGA/{VERSAO_CONTRATO}/"
+URL_RELEASE = "https://github.com/hcristosm/BELUGA/releases/latest/download/"
 
 UFS_VALIDAS = {
     "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS",
@@ -62,8 +69,34 @@ def dir_cache(data_dir: Path = DATA_DIR) -> Path:
     return data_dir / "cache"
 
 
+def dir_release(data_dir: Path = DATA_DIR) -> Path:
+    """Arquivos anexados à Release da coleta (não vão para o git)."""
+    return data_dir / "release"
+
+
 def dir_shapefiles(data_dir: Path = DATA_DIR) -> Path:
-    return data_dir / "release" / "shp"
+    return dir_release(data_dir) / "shp"
+
+
+def caminho_shapefile_uf(uf: str, data_dir: Path = DATA_DIR) -> Path:
+    return dir_shapefiles(data_dir) / f"setores_{uf.lower()}.zip"
+
+
+def caminho_gpkg_nacional(data_dir: Path = DATA_DIR) -> Path:
+    return dir_release(data_dir) / "setores.gpkg"
+
+
+def caminho_parquet_nacional(data_dir: Path = DATA_DIR) -> Path:
+    return dir_release(data_dir) / "setores.parquet"
+
+
+def caminho_csv_nacional(data_dir: Path = DATA_DIR) -> Path:
+    return dir_release(data_dir) / "setores.csv"
+
+
+def caminho_pmtiles(saida_dir: Path = PUBLICACAO_DIR) -> Path:
+    """Tiles vetoriais. Ficam no Pages porque PMTiles é lido por Range."""
+    return saida_dir / "setores.pmtiles"
 
 
 def caminho_setores_uf(uf: str, saida_dir: Path = PUBLICACAO_DIR) -> Path:

@@ -67,6 +67,18 @@ jobs:
           if [ -n "$UFS" ]; then args+=(--ufs "$UFS"); fi
           python -m src.cli coletar --diretorio data "${args[@]}"
 
+      - name: Instalar o tippecanoe
+        # Gera o PMTiles. Se a instalação falhar, o job reprova em vez de
+        # publicar sem os tiles: a coleta é mensal e o workflow_dispatch
+        # existe para repetir. Degradar em silêncio é o que não pode.
+        if: "!cancelled()"
+        run: |
+          # Uma retentativa, porque mirror intermitente do apt custaria o mês
+          # inteiro do dado, não só os tiles.
+          sudo apt-get update -qq || sudo apt-get update -qq
+          sudo apt-get install -y -qq tippecanoe
+          tippecanoe --version
+
       - name: Exportar publicação v1
         if: "!cancelled()"
         run: python -m src.cli exportar --diretorio data --saida docs/visualizador/v1
@@ -120,28 +132,56 @@ jobs:
           user_email: "github-actions[bot]@users.noreply.github.com"
           commit_message: "chore(gh-pages): publicar setores v1"
 
-      - name: Empacotar bruto e Shapefiles
+      - name: Empacotar bruto e agregados
         if: "!cancelled() && steps.conferir.outputs.publicar == 'true'"
         id: pacote
         run: |
+          set -euo pipefail
           data=$(date -u +%Y-%m-%d)
-          echo "tag=dados-${data}-${GITHUB_RUN_ID}" >> "$GITHUB_OUTPUT"
+          tag="dados-${data}-${GITHUB_RUN_ID}"
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
           mkdir -p release
           (cd data && zip -qr "../release/bruto_${data}.zip" bruto)
-          cp data/release/shp/*.zip release/
-          cp docs/visualizador/v1/manifest.json release/manifest.json
+          python scripts/empacotar_release.py \
+            --manifesto docs/visualizador/v1/manifest.json \
+            --origem data/release \
+            --destino release \
+            --tag "$tag"
           ls -la release
 
       - name: Criar Release de dados
         # Release imutável por coleta: o bruto sem alteração (com sha256 no
-        # manifest de cada fonte) e os Shapefiles por UF.
-        if: "!cancelled() && steps.conferir.outputs.publicar == 'true'"
+        # manifest de cada fonte), os Shapefiles por UF e os agregados
+        # nacionais (GeoPackage, GeoParquet e CSV).
+        # `!cancelled()` é verdadeiro depois de um passo que falhou, então a
+        # condição olha o resultado do empacotamento: Release incompleta que
+        # rouba o `latest` é pior que Release nenhuma.
+        if: "steps.pacote.outcome == 'success' && steps.conferir.outputs.publicar == 'true'"
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.pacote.outputs.tag }}
           name: Dados ${{ steps.pacote.outputs.tag }}
           body: "Coleta automática. Contrato v1: docs/contrato-dados.md."
           files: release/*
+          # Esta é a Release que `releases/latest/download/` tem de resolver:
+          # é onde moram o GeoPackage, o GeoParquet e o CSV nacionais.
+          make_latest: "true"
+
+      - name: Conferir que latest aponta para esta Release
+        # Todas as URLs de docs/usar-os-dados.md dependem disto. Input
+        # desconhecido em `with:` só gera warning no Actions, então o
+        # `make_latest` não pode ser tomado como garantido: confira.
+        if: "steps.pacote.outcome == 'success' && steps.conferir.outputs.publicar == 'true'"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ESPERADA: ${{ steps.pacote.outputs.tag }}
+        run: |
+          atual=$(gh api "repos/${GITHUB_REPOSITORY}/releases/latest" --jq .tag_name)
+          echo "latest = ${atual} (esperada: ${ESPERADA})"
+          if [ "$atual" != "$ESPERADA" ]; then
+            echo "::error::releases/latest aponta para ${atual}. As URLs documentadas vão dar 404."
+            exit 1
+          fi
 
       - name: Reprovar se alguma coleta falhou
         # Publicação parcial é aceitável; esconder a falha, não.

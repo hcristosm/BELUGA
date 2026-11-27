@@ -23,7 +23,13 @@ jobs:
         run: python -m build
 
       - name: Criar release e anexar artefatos
+        # make_latest: false de propósito. O produto deste repositório é o
+        # dado, e as URLs documentadas em docs/usar-os-dados.md usam
+        # `releases/latest/download/`, que tem de resolver sempre para a
+        # última Release de DADOS. Se o release de código virasse o `latest`,
+        # essas URLs passariam a dar 404, porque aqui só vão sdist e wheel.
         uses: softprops/action-gh-release@v3
         with:
           files: dist/*
           generate_release_notes: true
+          make_latest: "false"

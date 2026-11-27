@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: >-
+  Se você usar os dados ou o código do BELUGA, cite este repositório. Cite
+  também a fonte primária de cada setor: o levantamento de campo é da CPRM/SGB,
+  da prefeitura ou do órgão estadual, e o BELUGA só padroniza e agrega.
+title: "BELUGA: Brazilian External Landslide & Unmapped Geohazard Archive"
+abstract: >-
+  Catálogo e base padronizada de setores de risco geológico do Brasil, reunindo
+  a setorização da CPRM/SGB e mapeamentos estaduais e municipais num esquema de
+  colunas único, com a proveniência de cada setor e a marcação de sobreposição
+  com a CPRM. Publicado em GeoJSON, GeoPackage, GeoParquet, PMTiles, CSV e
+  Shapefile, sob o contrato de dados v1.
+type: software
+authors:
+  - given-names: Mateus
+    family-names: Hcristos
+    alias: hcristosm
+version: 1.0.0
+date-released: "2026-11-26"
+license: AGPL-3.0-or-later
+repository-code: "https://github.com/hcristosm/BELUGA"
+url: "https://hcristosm.github.io/BELUGA/"
+keywords:
+  - risco geológico
+  - setorização de risco
+  - deslizamento
+  - defesa civil
+  - Brasil
+  - dados abertos
+  - CPRM
+  - SGB

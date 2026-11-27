@@ -10,7 +10,18 @@ nova do caminho (`/v2/`), com o `/v1/` mantido durante a transição.
 |---|---|---|
 | Publicação corrente | `https://hcristosm.github.io/BELUGA/v1/` (branch `gh-pages`) | leitura diária ou mensal pelo ORCA |
 | Normalizados por fonte | branch `dados-base`, `normalizado/<fonte>.gpkg` | estado entre coletas (uso interno) |
-| Snapshot de cada coleta | GitHub Release `dados-AAAA-MM-DD-<run>` | reprodutibilidade: bruto, Shapefiles e manifest |
+| Snapshot de cada coleta | GitHub Release `dados-AAAA-MM-DD-<run>` | reprodutibilidade: bruto, Shapefiles, agregados nacionais e manifest |
+| Última coleta, URL fixa | `https://github.com/hcristosm/BELUGA/releases/latest/download/<arquivo>` | GeoPackage, GeoParquet e CSV nacionais |
+
+No `manifest.json` publicado, `arquivos[*].url` usa esse `latest`, que é
+ponteiro móvel e é o que o consumidor quer. O manifest **anexado a cada
+Release** é reescrito para a tag daquela coleta, porque Release é imutável: um
+ponteiro móvel ali entregaria, no mês seguinte, arquivo cujo sha256 não bate
+com o manifest que a pessoa está lendo.
+
+A Release de dados é publicada com `make_latest: true` e a de código com
+`make_latest: false`, para `releases/latest/download/` resolver sempre para a
+coleta mais recente.
 
 A branch `gh-pages` guarda histórico (sem `force_orphan`). As Releases são
 imutáveis.
@@ -25,6 +36,21 @@ branch `gh-pages`, pasta raiz).
 | `manifest.json` | índice da publicação; é o primeiro arquivo a ler |
 | `setores_<uf>.geojson` | todos os setores da UF, de todas as fontes publicadas (UF em minúsculas) |
 | `relatorio_validacao.json` | erros e avisos da validação, por fonte |
+| `setores.pmtiles` | tiles vetoriais do país, camada `setores` |
+
+Só isto vai para o Pages. O `gh-pages` guarda histórico, então cada megabyte
+publicado ali fica no repositório para sempre, e o git recusa arquivo acima de
+100 MiB. Vai para o Pages o que precisa de URL servida com CORS: o contrato v1
+e o PMTiles, que é lido por requisição Range. Os agregados nacionais
+(`setores.gpkg`, `setores.parquet`, `setores.csv`) e os Shapefiles por UF vão
+para a Release.
+
+O PMTiles é a exceção que custa: é binário, é regerado todo mês e não ganha
+nada de compressão de delta. Se a `gh-pages` ficar grande, o histórico dela é o
+que se trunca, porque o dado autoritativo está na Release e na `dados-base`.
+
+**O PMTiles não serve para contar.** Em zoom baixo o tippecanoe descarta feição
+para o tile caber. A contagem autoritativa é a do `manifest.json`.
 
 `setores_<uf>.geojson` é GeoJSON RFC 7946: WGS84 (EPSG:4326), longitude e
 latitude, coordenadas com 7 casas decimais. As feições vêm ordenadas por
@@ -36,8 +62,8 @@ latitude, coordenadas com 7 casas decimais. As feições vêm ordenadas por
 ```json
 {
   "contrato": "v1",
-  "versao_esquema": "1.0.0",
-  "beluga_versao": "0.1.0",
+  "versao_esquema": "1.1.0",
+  "beluga_versao": "1.0.0",
   "gerado_em": "2026-11-21T19:04:33+00:00",
   "crs": "EPSG:4326",
   "total_setores": 20913,
@@ -51,6 +77,17 @@ latitude, coordenadas com 7 casas decimais. As feições vêm ordenadas por
       "por_fonte": {"br-sgb-setorizacao": 3695, "mg-belo-horizonte-pbh": 665, "mg-juiz-de-fora-sspdc": 994},
       "por_grau": {"Alto": 3212, "Baixo": 141, "Muito alto": 880, "Médio": 338, "sem grau": 783}
     }
+  },
+  "arquivos": {
+    "pmtiles": {
+      "arquivo": "setores.pmtiles",
+      "url": "https://hcristosm.github.io/BELUGA/v1/setores.pmtiles",
+      "bytes": …, "sha256": "…"
+    },
+    "gpkg":    {"arquivo": "setores.gpkg",    "url": "…/releases/latest/download/setores.gpkg",    "bytes": …, "sha256": "…"},
+    "parquet": {"arquivo": "setores.parquet", "url": "…/releases/latest/download/setores.parquet", "bytes": …, "sha256": "…"},
+    "csv":     {"arquivo": "setores.csv",     "url": "…/releases/latest/download/setores.csv",     "bytes": …, "sha256": "…"},
+    "shapefile": {"por_uf": {"mg": {"arquivo": "setores_mg.zip", "url": "…", "bytes": …, "sha256": "…"}}}
   },
   "fontes": [
     {
@@ -69,6 +106,14 @@ latitude, coordenadas com 7 casas decimais. As feições vêm ordenadas por
 `fontes` lista todo o catálogo, inclusive as fontes não publicadas (com
 `publicada: false` e `setores_publicados: 0`), para o consumidor saber o que
 existe e por que não veio.
+
+`arquivos` descreve os formatos agregados, com a URL estável, o tamanho e o
+sha256 de cada um. Uma chave ausente significa que aquele formato não foi
+gerado nesta publicação; o arquivo correspondente também sai do ar, porque o
+deploy não usa `keep_files` e remove do destino o que não está no diretório
+publicado (o `force_orphan`, que a publicação também não usa, é sobre
+histórico, não sobre remoção). Chave nova aqui sobe `versao_esquema` e não quebra ninguém: ignore o
+que você não conhece.
 
 ## Versionamento
 

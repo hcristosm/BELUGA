@@ -1,11 +1,19 @@
+# Um PR por ecossistema, por mês. Antes era um PR por dependência, por semana,
+# o que enchia a fila de revisão com bump de faixa mínima.
 version: 2
 updates:
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
+    groups:
+      pip:
+        patterns: ["*"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
+    groups:
+      github-actions:
+        patterns: ["*"]

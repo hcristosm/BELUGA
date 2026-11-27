@@ -183,6 +183,51 @@ jobs:
             exit 1
           fi
 
+      - name: Podar Releases de dados antigas
+        # Cada coleta publica cerca de 120 MB de artefatos. Sem poda o
+        # repositório acumula isso todo dia, e a conta de quem clona e a do
+        # armazenamento sobem junto.
+        #
+        # A ordem importa: a poda só roda DEPOIS de baixar de verdade os
+        # arquivos nacionais de `releases/latest/download/`, que é o que a
+        # documentação promete. Apagar a coleta anterior antes dessa prova
+        # deixaria o país sem dado baixável se a Release nova tivesse subido
+        # incompleta. Release de código (`v*`) nunca entra na lista.
+        if: "steps.pacote.outcome == 'success' && steps.conferir.outputs.publicar == 'true'"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ESPERADA: ${{ steps.pacote.outputs.tag }}
+          MANTER: "2"
+        run: |
+          set -euo pipefail
+          base="https://github.com/${GITHUB_REPOSITORY}/releases/latest/download"
+          for arquivo in setores.gpkg setores.parquet setores.csv manifest.json; do
+            codigo=$(curl -sSL -r 0-1023 -o /dev/null -w '%{http_code}' "${base}/${arquivo}")
+            echo "${arquivo}: HTTP ${codigo}"
+            case "$codigo" in
+              200|206) ;;
+              *)
+                echo "::error::${arquivo} não baixa de releases/latest (HTTP ${codigo}); nada foi podado."
+                exit 1
+                ;;
+            esac
+          done
+
+          antigas=$(gh release list --limit 200 --json tagName,createdAt --jq \
+            "[.[] | select(.tagName | startswith(\"dados-\"))] | sort_by(.createdAt) | reverse | .[${MANTER}:] | .[].tagName")
+          if [ -z "$antigas" ]; then
+            echo "Nada a podar: ${MANTER} ou menos Releases de dados."
+            exit 0
+          fi
+          for tag in $antigas; do
+            if [ "$tag" = "$ESPERADA" ]; then
+              echo "::error::a poda selecionou a Release desta coleta (${tag}); abortado sem apagar nada."
+              exit 1
+            fi
+            echo "apagando ${tag}"
+            gh release delete "$tag" --yes --cleanup-tag
+          done
+
       - name: Reprovar se alguma coleta falhou
         # Publicação parcial é aceitável; esconder a falha, não.
         if: "!cancelled() && steps.coleta.outcome == 'failure'"

@@ -8,8 +8,20 @@ import pytest
 import responses
 from responses import matchers
 
-from src.config import caminho_proveniencia, dir_bruto, dir_shapefiles
-from src.export.publicacao import ExportacaoError, exportar
+from src.config import (
+    caminho_csv_nacional,
+    caminho_gpkg_nacional,
+    caminho_parquet_nacional,
+    caminho_pmtiles,
+    caminho_proveniencia,
+    dir_bruto,
+    dir_shapefiles,
+)
+from src.export.publicacao import (
+    ExportacaoError,
+    centroides_do_csv,
+    exportar,
+)
 from src.pipeline import coletar_fonte, ler_normalizado
 from tests.conftest import FONTE_BASE, LAT, LON, fazer_fonte
 
@@ -142,7 +154,7 @@ def test_exporta_geojson_manifest_e_shapefile(tmp_path, fonte, fonte_cprm, clien
     espelho = fazer_fonte(id="mg-espelho", sigla="ESP", publicar=False)
 
     saida = tmp_path / "v1"
-    manifesto = exportar([fonte, fonte_cprm, pontos, espelho], tmp_path, saida)
+    manifesto = exportar([fonte, fonte_cprm, pontos, espelho], tmp_path, saida, pmtiles=False)
 
     assert manifesto["contrato"] == "v1"
     assert manifesto["total_setores"] == 7
@@ -187,7 +199,7 @@ def test_exportar_remove_uf_que_sumiu(tmp_path, fonte, cliente):
     saida = tmp_path / "v1"
     saida.mkdir()
     (saida / "setores_sp.geojson").write_text("{}")
-    manifesto = exportar([fonte], tmp_path, saida, shapefiles=False)
+    manifesto = exportar([fonte], tmp_path, saida, shapefiles=False, agregados=False, pmtiles=False)
     assert not (saida / "setores_sp.geojson").exists()
     assert sorted(p.name for p in saida.glob("setores_*.geojson")) == ["setores_mg.geojson"]
     assert set(manifesto["ufs"]) == {"mg"}
@@ -206,3 +218,228 @@ def test_unir_partes_de_setor_nao_dispara_a_guarda_de_queda(tmp_path, fonte, cli
     assert r.ok and r.setores == 10
     prov = json.loads(caminho_proveniencia(fonte.id, tmp_path).read_text())
     assert prov["particoes"]["completo"]["feicoes"] == 20
+
+
+# ---------------------------------------------------------------------------
+# Formatos agregados (GeoPackage, GeoParquet, CSV e PMTiles)
+# ---------------------------------------------------------------------------
+
+
+@responses.activate
+def test_agregados_nacionais_tem_todos_os_setores_e_sha256_no_manifest(
+    tmp_path, fonte, fonte_cprm, cliente,
+):
+    """GPKG, Parquet e CSV cobrem o país inteiro, e o manifest descreve cada um."""
+    import geopandas as gpd
+    import pandas as pd
+
+    _servir(_colecao(3))
+    coletar_fonte(fonte, cliente, tmp_path)
+    responses.reset()
+    _servir_cprm({"MG": 2})
+    coletar_fonte(fonte_cprm, cliente, tmp_path, ufs=["MG"])
+
+    saida = tmp_path / "v1"
+    manifesto = exportar([fonte, fonte_cprm], tmp_path, saida, pmtiles=False)
+    total = manifesto["total_setores"]
+    assert total == 5
+
+    gpkg = caminho_gpkg_nacional(tmp_path)
+    parquet = caminho_parquet_nacional(tmp_path)
+    csv = caminho_csv_nacional(tmp_path)
+
+    # Cada agregado tem o país inteiro, não uma UF.
+    assert len(gpd.read_file(gpkg)) == total
+    assert len(gpd.read_parquet(parquet)) == total
+    tabela = pd.read_csv(csv)
+    assert len(tabela) == total
+
+    # O manifest descreve os três, com sha256 que bate e URL de Release.
+    arquivos = manifesto["arquivos"]
+    assert set(arquivos) >= {"gpkg", "parquet", "csv", "shapefile"}
+    for chave, caminho in (("gpkg", gpkg), ("parquet", parquet), ("csv", csv)):
+        info = arquivos[chave]
+        assert info["arquivo"] == caminho.name
+        assert info["bytes"] == caminho.stat().st_size
+        assert info["sha256"] == hashlib.sha256(caminho.read_bytes()).hexdigest()
+        assert info["url"].endswith(caminho.name)
+        assert "releases/latest/download" in info["url"]
+
+
+@responses.activate
+def test_csv_tem_centroide_e_nao_tem_geometria(tmp_path, fonte, cliente):
+    """O CSV troca a geometria por lat/lon, e as coordenadas caem no setor."""
+    import pandas as pd
+
+    _servir(_colecao(2))
+    coletar_fonte(fonte, cliente, tmp_path)
+    exportar([fonte], tmp_path, tmp_path / "v1", shapefiles=False, pmtiles=False)
+
+    tabela = pd.read_csv(caminho_csv_nacional(tmp_path))
+    assert "geometry" not in tabela.columns
+    assert list(tabela.columns[-2:]) == ["lat", "lon"]
+    # Os polígonos sintéticos ficam em volta de (LAT, LON), em Juiz de Fora.
+    assert tabela["lat"].between(LAT - 0.01, LAT + 0.01).all()
+    assert tabela["lon"].between(LON - 0.01, LON + 0.01).all()
+    # E as colunas do esquema continuam todas lá.
+    assert {"num_setor", "uf", "grau_risco", "bl_fonte", "bl_sob_cp"} <= set(tabela.columns)
+
+
+def test_centroide_de_ponto_e_o_proprio_ponto():
+    """Para `ponto_risco` o centroide não desloca a coordenada."""
+    import geopandas as gpd
+    from shapely.geometry import Point
+
+    gdf = gpd.GeoDataFrame(
+        {"num_setor": ["X"]}, geometry=[Point(LON, LAT)], crs="EPSG:4326",
+    )
+    centro = centroides_do_csv(gdf)
+    assert centro["lat"].iloc[0] == pytest.approx(LAT, abs=1e-5)
+    assert centro["lon"].iloc[0] == pytest.approx(LON, abs=1e-5)
+
+
+@responses.activate
+def test_pmtiles_sem_tippecanoe_falha_alto(tmp_path, fonte, cliente, monkeypatch):
+    """Sem o tippecanoe a exportação recusa, em vez de publicar sem o PMTiles.
+
+    Publicar em silêncio deixaria no ar um PMTiles de uma coleta anterior que
+    o manifest não lista.
+    """
+    _servir(_colecao(2))
+    coletar_fonte(fonte, cliente, tmp_path)
+    monkeypatch.setattr("src.export.publicacao.shutil.which", lambda _: None)
+
+    with pytest.raises(ExportacaoError, match="tippecanoe"):
+        exportar([fonte], tmp_path, tmp_path / "v1", shapefiles=False, agregados=False)
+
+
+@responses.activate
+def test_sem_pmtiles_nao_gera_e_nao_entra_no_manifest(tmp_path, fonte, cliente):
+    _servir(_colecao(2))
+    coletar_fonte(fonte, cliente, tmp_path)
+    saida = tmp_path / "v1"
+    manifesto = exportar([fonte], tmp_path, saida, shapefiles=False, agregados=False, pmtiles=False)
+    assert "pmtiles" not in manifesto["arquivos"]
+    assert not caminho_pmtiles(saida).exists()
+
+
+@responses.activate
+def test_exportar_remove_agregado_de_coleta_anterior(tmp_path, fonte, cliente):
+    """Agregado que esta coleta não regerou não pode ficar no diretório."""
+    _servir(_colecao(2))
+    coletar_fonte(fonte, cliente, tmp_path)
+    velho = caminho_gpkg_nacional(tmp_path)
+    velho.parent.mkdir(parents=True, exist_ok=True)
+    velho.write_bytes(b"gpkg de ontem")
+
+    exportar([fonte], tmp_path, tmp_path / "v1", shapefiles=False, agregados=False, pmtiles=False)
+    assert not velho.exists()
+
+
+def _tippecanoe_falso(diretorio, corpo: str) -> None:
+    """Põe um `tippecanoe` executável no PATH, para exercitar o invólucro.
+
+    O tippecanoe de verdade é um binário C++ que não está nas dependências do
+    projeto; o CI o instala pelo apt. O que precisa de teste aqui é o nosso
+    invólucro: os argumentos montados, a troca atômica e o erro quando ele
+    reprova.
+    """
+    binario = diretorio / "tippecanoe"
+    binario.write_text(corpo)
+    binario.chmod(0o755)
+
+
+@responses.activate
+def test_pmtiles_monta_o_comando_e_troca_atomicamente(tmp_path, fonte, cliente, monkeypatch):
+    _servir(_colecao(2))
+    coletar_fonte(fonte, cliente, tmp_path)
+    falso = tmp_path / "bin"
+    falso.mkdir()
+    _tippecanoe_falso(falso, '#!/bin/sh\nprintf "%s\\n" "$@" > "$TIPPE_LOG"\n: > "$2"\n')
+    log = tmp_path / "args.txt"
+    monkeypatch.setenv("PATH", str(falso), prepend=False)
+    monkeypatch.setenv("TIPPE_LOG", str(log))
+
+    saida = tmp_path / "v1"
+    manifesto = exportar([fonte], tmp_path, saida, shapefiles=False, agregados=False)
+
+    argumentos = log.read_text().split("\n")
+    assert "-l" in argumentos and "setores" in argumentos
+    assert "--drop-densest-as-needed" in argumentos
+    assert "-Z" in argumentos and "-z" in argumentos
+    # Recebe os GeoJSON por UF já gravados, não um temporário nosso.
+    assert str(saida / "setores_mg.geojson") in argumentos
+    # O `-o` aponta para o temporário, e o final é o nome definitivo.
+    assert any(a.endswith(".pmtiles.tmp") for a in argumentos)
+    assert caminho_pmtiles(saida).exists()
+    assert not caminho_pmtiles(saida).with_name("setores.pmtiles.tmp").exists()
+    assert manifesto["arquivos"]["pmtiles"]["url"].endswith("v1/setores.pmtiles")
+
+
+@responses.activate
+def test_pmtiles_que_reprova_nao_deixa_arquivo_pela_metade(tmp_path, fonte, cliente, monkeypatch):
+    _servir(_colecao(2))
+    coletar_fonte(fonte, cliente, tmp_path)
+    falso = tmp_path / "bin"
+    falso.mkdir()
+    _tippecanoe_falso(falso, '#!/bin/sh\n: > "$2"\necho "geometria invalida" >&2\nexit 3\n')
+    monkeypatch.setenv("PATH", str(falso), prepend=False)
+
+    saida = tmp_path / "v1"
+    with pytest.raises(ExportacaoError, match="geometria invalida"):
+        exportar([fonte], tmp_path, saida, shapefiles=False, agregados=False)
+    assert not caminho_pmtiles(saida).exists()
+
+
+@responses.activate
+def test_sob_cp_mantem_os_tres_estados_em_cada_formato(tmp_path, fonte, fonte_cprm, cliente):
+    """`bl_sob_cp` tem três estados, e nenhum formato pode colapsar dois.
+
+    True = a CPRM cobre; False = conferido e não cobre; nulo = é setor da
+    própria CPRM, não se aplica. GeoJSON, GeoPackage e GeoParquet guardam
+    booleano; o Shapefile, cujo DBF não tem booleano, guarda 1 / 0 / vazio.
+
+    O GeoPackage é conferido pelo tipo declarado no arquivo e pelo valor cru
+    no SQLite, não pelo que o pandas devolve: pandas converte coluna inteira
+    com nulo para real, e isso é do leitor, não do arquivo.
+    """
+    import geopandas as gpd
+    import pandas as pd
+
+    _servir(_colecao(2))
+    coletar_fonte(fonte, cliente, tmp_path)
+    responses.reset()
+    _servir_cprm({"MG": 2})
+    coletar_fonte(fonte_cprm, cliente, tmp_path, ufs=["MG"])
+
+    saida = tmp_path / "v1"
+    exportar([fonte, fonte_cprm], tmp_path, saida, pmtiles=False)
+
+    # GeoParquet: booleano de verdade, com o nulo preservado.
+    parquet = gpd.read_parquet(caminho_parquet_nacional(tmp_path))
+    assert parquet["bl_sob_cp"].dtype == "boolean"
+    cprm = parquet["bl_fonte"] == "br-sgb-setorizacao"
+    assert parquet.loc[cprm, "bl_sob_cp"].isna().all()
+    assert not parquet.loc[~cprm, "bl_sob_cp"].isna().any()
+
+    # GeoPackage: coluna declarada BOOLEAN e NULL de verdade no SQLite.
+    import sqlite3
+
+    caminho_gpkg = caminho_gpkg_nacional(tmp_path)
+    con = sqlite3.connect(caminho_gpkg)
+    try:
+        ddl = con.execute(
+            "SELECT sql FROM sqlite_master WHERE name = 'setores_risco'"
+        ).fetchone()[0]
+        assert '"bl_sob_cp" BOOLEAN' in ddl
+        tipos = dict(con.execute(
+            "SELECT bl_fonte, typeof(bl_sob_cp) FROM setores_risco"
+        ).fetchall())
+    finally:
+        con.close()
+    assert tipos["br-sgb-setorizacao"] == "null"
+    assert tipos["mg-teste-municipal"] == "integer"
+
+    # CSV: os três estados continuam distinguíveis (vazio para a CPRM).
+    tabela = pd.read_csv(caminho_csv_nacional(tmp_path))
+    assert tabela.loc[tabela["bl_fonte"] == "br-sgb-setorizacao", "bl_sob_cp"].isna().all()

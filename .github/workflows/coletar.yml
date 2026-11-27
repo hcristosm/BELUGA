@@ -67,6 +67,16 @@ jobs:
           if [ -n "$UFS" ]; then args+=(--ufs "$UFS"); fi
           python -m src.cli coletar --diretorio data "${args[@]}"
 
+      - name: Instalar o tippecanoe
+        # Gera o PMTiles. Se a instalação falhar, o job reprova em vez de
+        # publicar sem os tiles: a coleta é mensal e o workflow_dispatch
+        # existe para repetir. Degradar em silêncio é o que não pode.
+        if: "!cancelled()"
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq tippecanoe
+          tippecanoe --version
+
       - name: Exportar publicação v1
         if: "!cancelled()"
         run: python -m src.cli exportar --diretorio data --saida docs/visualizador/v1
@@ -129,12 +139,16 @@ jobs:
           mkdir -p release
           (cd data && zip -qr "../release/bruto_${data}.zip" bruto)
           cp data/release/shp/*.zip release/
+          # Agregados nacionais. O GeoPackage passa de 100 MiB e por isso não
+          # cabe no git (nem no gh-pages); asset de Release aceita até 2 GB.
+          cp data/release/setores.gpkg data/release/setores.parquet data/release/setores.csv release/
           cp docs/visualizador/v1/manifest.json release/manifest.json
           ls -la release
 
       - name: Criar Release de dados
         # Release imutável por coleta: o bruto sem alteração (com sha256 no
-        # manifest de cada fonte) e os Shapefiles por UF.
+        # manifest de cada fonte), os Shapefiles por UF e os agregados
+        # nacionais (GeoPackage, GeoParquet e CSV).
         if: "!cancelled() && steps.conferir.outputs.publicar == 'true'"
         uses: softprops/action-gh-release@v3
         with:
@@ -142,6 +156,10 @@ jobs:
           name: Dados ${{ steps.pacote.outputs.tag }}
           body: "Coleta automática. Contrato v1: docs/contrato-dados.md."
           files: release/*
+          # Esta é a Release que `releases/latest/download/` tem de resolver:
+          # é onde moram o GeoPackage, o GeoParquet e o CSV nacionais.
+          make_latest: "true"
+
 
       - name: Reprovar se alguma coleta falhou
         # Publicação parcial é aceitável; esconder a falha, não.

@@ -83,9 +83,15 @@ def exportar(
     saida: Path = typer.Option(PUBLICACAO_DIR, help="Onde gravar a publicação v1."),
     sem_malha: bool = typer.Option(False, help="Pula o teste de município (não consulta o IBGE)."),
     sem_shapefile: bool = typer.Option(False, help="Não gera os Shapefiles da Release."),
+    sem_agregados: bool = typer.Option(
+        False, help="Não gera o GeoPackage, o GeoParquet e o CSV nacionais."
+    ),
+    sem_pmtiles: bool = typer.Option(
+        False, help="Não gera o PMTiles (que exige o tippecanoe no PATH)."
+    ),
     verboso: bool = typer.Option(False, "-v"),
 ) -> None:
-    """Junta as fontes, marca sobreposição com a CPRM, valida e publica GeoJSON por UF."""
+    """Junta as fontes, marca sobreposição com a CPRM, valida e publica os formatos v1."""
     from src.export.publicacao import ExportacaoError, juntar_fontes
     from src.export.publicacao import exportar as _exportar
     from src.validacao.malhas import obter_malhas
@@ -104,12 +110,18 @@ def exportar(
             avisos.append(f"malha do IBGE indisponível para: {', '.join(sem)}")
     try:
         manifesto = _exportar(
-            fontes, diretorio, saida, malhas, avisos, shapefiles=not sem_shapefile,
+            fontes, diretorio, saida, malhas, avisos,
+            shapefiles=not sem_shapefile,
+            agregados=not sem_agregados,
+            pmtiles=not sem_pmtiles,
         )
     except ExportacaoError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(1) from exc
     typer.echo(f"{manifesto['total_setores']} setores em {len(manifesto['ufs'])} UF(s) gravados em {saida}")
+    for chave, info in manifesto["arquivos"].items():
+        if "bytes" in info:
+            typer.echo(f"  {chave}: {info['arquivo']} ({info['bytes'] / 1e6:.1f} MB)")
 
 
 if __name__ == "__main__":

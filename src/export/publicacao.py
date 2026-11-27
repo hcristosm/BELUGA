@@ -83,6 +83,11 @@ CASAS_CENTROIDE = 6  # ~10 cm; o centroide do CSV é referência, não geometria
 PMTILES_ZOOM_MIN = 5
 PMTILES_ZOOM_MAX = 14
 PMTILES_CAMADA = "setores"
+# Assinatura de um PMTiles v3: "PMTiles" e a versão do formato. O tippecanoe
+# escolhe o formato de saída pela EXTENSÃO do arquivo, então um temporário
+# terminado em .tmp faz ele gravar MBTiles (SQLite) com nome de PMTiles, sem
+# reclamar. Conferir os bytes é o que pega isso.
+PMTILES_ASSINATURA = b"PMTiles\x03"
 
 
 class ExportacaoError(RuntimeError):
@@ -257,7 +262,9 @@ def _gravar_pmtiles(entradas: list[Path], destino: Path) -> None:
     if not entradas:
         raise ExportacaoError("nenhum GeoJSON de UF para gerar o PMTiles")
     destino.parent.mkdir(parents=True, exist_ok=True)
-    temporario = destino.with_name(destino.name + ".tmp")
+    # O temporário mantém a extensão .pmtiles: é por ela que o tippecanoe
+    # escolhe o formato de saída.
+    temporario = destino.with_name(destino.stem + ".tmp" + destino.suffix)
     comando = [
         "tippecanoe", "-o", str(temporario), "--force",
         "-l", PMTILES_CAMADA,
@@ -278,9 +285,28 @@ def _gravar_pmtiles(entradas: list[Path], destino: Path) -> None:
             raise ExportacaoError(
                 f"tippecanoe saiu com {resultado.returncode}: {resultado.stderr.strip()[-2000:]}"
             )
+        _conferir_pmtiles(temporario)
         os.replace(temporario, destino)
     finally:
         temporario.unlink(missing_ok=True)
+
+
+def _conferir_pmtiles(caminho: Path) -> None:
+    """Recusa arquivo que não seja PMTiles de verdade.
+
+    O tippecanoe sai com 0 e grava MBTiles quando não reconhece a extensão
+    como PMTiles. O arquivo fica com o nome certo, o tamanho plausível e
+    conteúdo que nenhum leitor de PMTiles abre. Sem esta conferência, a
+    publicação segue e o mapa web de quem consome simplesmente não carrega.
+    """
+    with caminho.open("rb") as fh:
+        inicio = fh.read(len(PMTILES_ASSINATURA))
+    if inicio != PMTILES_ASSINATURA:
+        raise ExportacaoError(
+            f"{caminho.name} não é PMTiles: começa com {inicio!r}, e não "
+            f"{PMTILES_ASSINATURA!r}. O tippecanoe escolhe o formato pela extensão "
+            "do arquivo de saída."
+        )
 
 
 def _descrever(caminho: Path, url_base: str) -> dict[str, Any]:

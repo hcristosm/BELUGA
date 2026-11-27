@@ -377,7 +377,11 @@ def test_pmtiles_monta_o_comando_e_troca_atomicamente(tmp_path, fonte, cliente, 
     coletar_fonte(fonte, cliente, tmp_path)
     falso = tmp_path / "bin"
     falso.mkdir()
-    _tippecanoe_falso(falso, '#!/bin/sh\nprintf "%s\\n" "$@" > "$TIPPE_LOG"\n: > "$2"\n')
+    # O falso grava a assinatura de um PMTiles v3, que é o que a exportação confere.
+    _tippecanoe_falso(
+        falso,
+        '#!/bin/sh\nprintf "%s\\n" "$@" > "$TIPPE_LOG"\nprintf \'PMTiles\\003\' > "$2"\n',
+    )
     log = tmp_path / "args.txt"
     monkeypatch.setenv("PATH", str(falso), prepend=False)
     monkeypatch.setenv("TIPPE_LOG", str(log))
@@ -391,10 +395,12 @@ def test_pmtiles_monta_o_comando_e_troca_atomicamente(tmp_path, fonte, cliente, 
     assert "-Z" in argumentos and "-z" in argumentos
     # Recebe os GeoJSON por UF já gravados, não um temporário nosso.
     assert str(saida / "setores_mg.geojson") in argumentos
-    # O `-o` aponta para o temporário, e o final é o nome definitivo.
-    assert any(a.endswith(".pmtiles.tmp") for a in argumentos)
+    # O temporário TEM de terminar em .pmtiles: é pela extensão que o
+    # tippecanoe escolhe o formato, e com .tmp ele grava MBTiles em silêncio.
+    temporarios = [a for a in argumentos if ".tmp" in a]
+    assert temporarios and all(a.endswith(".pmtiles") for a in temporarios)
     assert caminho_pmtiles(saida).exists()
-    assert not caminho_pmtiles(saida).with_name("setores.pmtiles.tmp").exists()
+    assert not list(saida.glob("*.tmp*"))
     assert manifesto["arquivos"]["pmtiles"]["url"].endswith("v1/setores.pmtiles")
 
 
@@ -499,3 +505,25 @@ def test_exemplo_de_duckdb_da_documentacao_funciona(tmp_path, fonte, fonte_cprm,
 
     assert total == manifesto["total_setores"]
     assert por_fonte == manifesto["ufs"]["mg"]["por_fonte"]
+
+
+@responses.activate
+def test_mbtiles_com_nome_de_pmtiles_e_recusado(tmp_path, fonte, cliente, monkeypatch):
+    """O tippecanoe sai com 0 e grava MBTiles quando não reconhece a extensão.
+
+    Foi o que aconteceu de verdade na primeira publicação: o temporário
+    terminava em `.tmp`, o tippecanoe gravou SQLite com nome `.pmtiles`, saiu
+    com 0, e o arquivo foi para o ar com tamanho plausível e conteúdo que
+    nenhum leitor de PMTiles abre.
+    """
+    _servir(_colecao(2))
+    coletar_fonte(fonte, cliente, tmp_path)
+    falso = tmp_path / "bin"
+    falso.mkdir()
+    _tippecanoe_falso(falso, '#!/bin/sh\nprintf \'SQLite format 3\\000\' > "$2"\n')
+    monkeypatch.setenv("PATH", str(falso), prepend=False)
+
+    saida = tmp_path / "v1"
+    with pytest.raises(ExportacaoError, match="não é PMTiles"):
+        exportar([fonte], tmp_path, saida, shapefiles=False, agregados=False)
+    assert not caminho_pmtiles(saida).exists()

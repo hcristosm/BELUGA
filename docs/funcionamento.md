@@ -80,6 +80,11 @@ Sem `--sem-pmtiles` e sem o tippecanoe instalado, o `exportar` **falha**. Isso
 é de propósito: publicar sem os tiles em silêncio deixaria no ar um PMTiles de
 uma coleta anterior que o manifest não lista.
 
+O `exportar` também confere a assinatura do arquivo que o tippecanoe gerou. O
+tippecanoe escolhe o formato de saída pela **extensão** do arquivo e grava
+MBTiles quando não reconhece `.pmtiles`, saindo com 0. Extensão não é prova de
+formato: os bytes são.
+
 ## Coleta responsável
 
 - User-Agent identificado: `BELUGA/<versão> (+https://github.com/hcristosm/BELUGA)`.

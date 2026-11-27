@@ -43,6 +43,14 @@ python3 -m venv .venv
 .venv/bin/pip install -e ".[dev]"
 ```
 
+Para gerar o PMTiles também é preciso o `tippecanoe`, que não é pacote Python:
+`sudo apt install tippecanoe`. Sem ele, rode `exportar --sem-pmtiles`; o
+`exportar` falha de propósito se o PMTiles for pedido e a ferramenta não
+estiver no PATH.
+
+Como o projeto funciona por dentro (pipeline, workflows, guardas e como
+reverter) está em [docs/funcionamento.md](docs/funcionamento.md).
+
 ## Testes e gates
 
 O CI roda estes comandos a cada push e PR. Rode-os antes de commitar:
@@ -62,6 +70,12 @@ casos de falha.
 O visualizador é validado à mão: `scripts/rodar_visualizador.sh`, desktop e
 celular (abaixo de 760 px), temas claro e escuro, console sem erro.
 
+Mudança que afeta quem consome os dados entra também em
+[docs/usar-os-dados.md](docs/usar-os-dados.md) e, se mexer no formato ou no
+significado de uma coluna, em [docs/contrato-dados.md](docs/contrato-dados.md).
+Coluna que muda de nome, de tipo ou de significado sobe o `contrato` para
+`/v2/`; campo novo no manifest sobe só o `versao_esquema`.
+
 ## Padrão de commits
 
 [Conventional Commits](https://www.conventionalcommits.org/), em português:
@@ -75,6 +89,6 @@ relevante ganha entrada no `CHANGELOG.md`, em `[Unreleased]`, agrupada por
 
 ## Releases
 
-Bump da versão no `pyproject.toml` e em `src/__init__.py`, entrada no
-`CHANGELOG.md` e tag `vX.Y.Z`. As Releases de dados (`dados-*`) são criadas pelo
+Bump da versão no `pyproject.toml`, em `src/__init__.py` e no `CITATION.cff`,
+entrada no `CHANGELOG.md` e tag `vX.Y.Z`. As Releases de dados (`dados-*`) são criadas pelo
 workflow de coleta, não à mão.

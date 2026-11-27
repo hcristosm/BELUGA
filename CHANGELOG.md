@@ -9,7 +9,15 @@ O projeto segue [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-26
+
 ### FEATURES
+- feat(export): GeoPackage, GeoParquet e CSV nacionais, e PMTiles do país inteiro, além do GeoJSON e do Shapefile por UF. Cada arquivo entra no `manifest.json` com tamanho, sha256 e URL estável, na chave nova `arquivos`. O PMTiles fica no Pages, porque é lido por requisição Range e precisa de CORS; os agregados vão para a Release, porque o `gh-pages` guarda histórico e o git recusa arquivo acima de 100 MiB
+- feat(export): `exportar` recusa gerar a publicação quando o PMTiles foi pedido e o `tippecanoe` não está no PATH, em vez de publicar sem os tiles. Quem não tem a ferramenta passa `--sem-pmtiles` de propósito. As opções `--sem-agregados` e `--sem-pmtiles` acompanham as `--sem-malha` e `--sem-shapefile` que já existiam
+- feat(ci): o workflow de coleta instala o `tippecanoe` e anexa os agregados nacionais à Release de dados. A Release de dados passa a ser a `latest`, e a de código deixa de ser, para `releases/latest/download/` resolver sempre para a coleta mais recente
+- docs: `docs/usar-os-dados.md`, para quem consome: o que tem, as URLs de cada formato, como conferir o sha256, exemplos em QGIS, Python com geopandas, DuckDB, R com sf e MapLibre com PMTiles, as licenças por fonte e o versionamento. Mais `CITATION.cff`, validado contra o esquema 1.2.0
+- docs: `docs/funcionamento.md`, com o caminho do dado, os comandos, a coleta responsável, as cinco camadas que protegem a publicação, os workflows passo a passo, como reverter cada situação e a ordem da primeira publicação
+
 - feat(catalogo): três fontes municipais novas, todas em ArcGIS REST: Suzano/SP (178 setores de 2019, município sem setor da CPRM), Congonhas/MG (73 setores do PMRR) e o levantamento próprio de Contagem/MG de 2024 (265 pontos geológicos e hidrológicos). A publicação passa de 20.913 para 21.429 setores
 - feat(normalizacao): `tipologia.palavras_chave` extrai a tipologia de processo em texto livre por expressão regular, ignorando maiúsculas e acentos, na ordem das regras e sem repetir a mesma tipologia geral
 - fix(visualizador): a ficha do setor mostra as tipologias 4 e 5
@@ -22,3 +30,8 @@ O projeto segue [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 - feat(export): publicação v1 com `setores_<uf>.geojson`, `manifest.json` (contagem, sha256 e fontes) e `relatorio_validacao.json`; Shapefile por UF para as Releases
 - feat(visualizador): mapa estático (HTML/JS, Leaflet) para conferir os setores agregados, com filtros por fonte, grau e sobreposição, ficha de proveniência, catálogo e relatório de validação
 - feat(ci): workflow mensal de coleta e publicação (dados-base, gh-pages e Release de dados) com a guarda anti-regressão do ORCA, e CI com ruff, mypy, bandit, catálogo e pytest
+
+### CHORE
+- docs(readme): README reorganizado em torno de propósito, como usar os dados, fontes e créditos, diferenças de produto, como rodar localmente, limitações e licença. O detalhe de operação foi para `docs/funcionamento.md` e o roadmap saiu
+- chore(deps): dependabot agrupado, um PR por ecossistema e por mês, em vez de um PR por dependência e por semana. Incorpora os bumps que estavam abertos: jsonschema 4.26.0, pyyaml 6.0.3, typer 0.29.2 e ruff 0.17.5
+- chore(deps): `pyarrow` entra como dependência de runtime (GeoParquet), e `duckdb` e `pmtiles` como de desenvolvimento, para conferir os exemplos da documentação

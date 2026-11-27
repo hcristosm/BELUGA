@@ -1,0 +1,13 @@
+{
+  "fonte": "mg-contagem-defesa-civil-2024",
+  "particoes": {
+    "completo": {
+      "avisos": {},
+      "coletado_em": "2026-11-27T02:43:53+00:00",
+      "feicoes": 265,
+      "setores": 265,
+      "sha256": "1171507aadaed6f5f2b59a9e33f0c21402fe257257341cfb18cb093051428a01"
+    }
+  },
+  "setores": 265
+}

@@ -1,0 +1,15 @@
+{
+  "fonte": "pe-recife-sedec",
+  "particoes": {
+    "completo": {
+      "avisos": {
+        "feições com o mesmo código e atributos unidas num setor": 36
+      },
+      "coletado_em": "2026-11-27T02:44:15+00:00",
+      "feicoes": 400,
+      "setores": 364,
+      "sha256": "0f8036b19ec604816dfccd93e7db30dc5b764e411d512faad682def88090bf47"
+    }
+  },
+  "setores": 364
+}

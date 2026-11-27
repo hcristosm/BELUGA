@@ -13,6 +13,10 @@ O projeto segue [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 - feat(logo): ícone próprio para o visualizador. O `beluga-192.png` era a marca inteira, que é 2:1, encaixada num quadrado: sobravam tarjas, a beluga ficava com 20 px de altura e em 32 px virava borrão. O ícone passa a sair do recorte da cabeça com as ondas de sonar, sobre cartão arredondado claro com cantos transparentes, porque o miolo da cabeça é transparente na arte e sem fundo a beluga sumia no painel escuro. O `beluga-icone.png` vira `beluga-marca.png`, que é o que ele sempre foi, o header do README vira WebP e cai de 982 KB para 22 KB, e `scripts/gerar_logos.py` refaz tudo a partir da marca
 - feat(workflow): a coleta poda as Releases de dados antigas, guardando as duas mais recentes com a tag junto. Cada coleta publica cerca de 120 MB de artefatos, e em um dia já havia três Releases empilhadas. A poda só roda depois de baixar de verdade, por range request, os arquivos nacionais de `releases/latest/download/`: apagar a coleta anterior antes dessa prova deixaria o país sem dado baixável se a Release nova tivesse subido incompleta. Release de código (`v*`) nunca entra na lista
 
+### CHORE
+- docs(readme): seção "Para quem é", com o uso por prefeituras, pesquisa e outros projetos, e seção "Como citar"
+- chore(citation): nome completo do autor e ORCID no `CITATION.cff`, que antes trazia só "Hcristos" como sobrenome
+
 ## [1.0.0] - 2026-11-27
 
 Primeira publicação do BELUGA: **21.429 setores em 27 UFs**, de 7 fontes, com

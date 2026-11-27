@@ -34,6 +34,18 @@ O BELUGA faz três coisas:
 É projeto irmão do [ORCA](https://github.com/hcristosm/ORCA), que lê daqui os
 setores de risco, os da CPRM inclusive.
 
+## Para quem é
+
+- **Prefeituras e defesas civis.** Ver como o mapeamento da cidade aparece ao
+  lado do da CPRM e indicar uma fonte que esteja faltando, por issue ou por um
+  YAML no [catálogo](docs/catalogo.md).
+- **Pesquisa.** Uma base nacional única, com a proveniência de cada setor,
+  pronta para abrir no QGIS, no Python ou no R, sem juntar dezenas de arquivos
+  com colunas diferentes.
+- **Outros projetos.** Os arquivos são estáticos e têm um
+  [contrato de estabilidade](docs/contrato-dados.md). O ORCA é o primeiro a
+  usar, mas a base foi feita para servir a qualquer um.
+
 ## Usar os dados
 
 Tudo é arquivo estático: não há API, não há chave, não há limite de requisição.
@@ -159,6 +171,15 @@ Os comandos, as opções e o que protege a publicação estão em
 - [Esquema dos setores](docs/esquema-setores.md): cada coluna, domínio e origem.
 - [Catálogo de fontes](docs/catalogo.md): campos do YAML e como adicionar uma fonte.
 - [Como contribuir](CONTRIBUTING.md).
+
+## Como citar
+
+Se o BELUGA entrar num trabalho, relatório ou artigo, use o botão **Cite this
+repository**, no topo da página do GitHub. Ele lê o
+[`CITATION.cff`](CITATION.cff) e entrega a referência em APA e BibTeX. Cite
+também a fonte primária de cada setor, que vem na coluna `bl_fonte` e no
+`manifest.json`: o levantamento de campo é da CPRM/SGB, da prefeitura ou do
+órgão estadual.
 
 ## Licença
 

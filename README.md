@@ -8,6 +8,7 @@
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](#rodar-localmente)
 [![Licença](https://img.shields.io/badge/licença-AGPL--3.0-blue)](LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24606707.svg)](https://doi.org/10.5281/zenodo.24606707)
 
 </div>
 
@@ -176,7 +177,7 @@ Os comandos, as opções e o que protege a publicação estão em
 
 Se o BELUGA entrar num trabalho, relatório ou artigo, use o botão **Cite this
 repository**, no topo da página do GitHub. Ele lê o
-[`CITATION.cff`](CITATION.cff) e entrega a referência em APA e BibTeX. Cite
+[`CITATION.cff`](CITATION.cff) e entrega a referência em APA e BibTeX. O DOI permanente, que sempre aponta para a versão mais recente, é [10.5281/zenodo.24606707](https://doi.org/10.5281/zenodo.24606707). Cite
 também a fonte primária de cada setor, que vem na coluna `bl_fonte` e no
 `manifest.json`: o levantamento de campo é da CPRM/SGB, da prefeitura ou do
 órgão estadual.

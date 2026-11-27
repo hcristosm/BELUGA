@@ -48,6 +48,7 @@ docs/
 scripts/
   conferir_publicacao.py    guarda anti-regressão (a mesma do ORCA)
   empacotar_release.py      monta o diretório da Release a partir do manifest
+  notas_release.py          extrai do CHANGELOG as notas de uma versão
   gerar_municipios_ibge.py  atualiza o catálogo de municípios
   rodar_visualizador.sh     servidor local do visualizador
 ```
@@ -208,9 +209,11 @@ apertar antes disso, é baixar `PMTILES_ZOOM_MAX` de 14 para 12.
 
 ### `release.yml`
 
-Dispara em tag `v*`: `python -m build` (sdist e wheel) e cria a Release com
+Dispara em tag `v*`: `python -m build` (sdist e wheel), tira as notas do
+`CHANGELOG.md` com `scripts/notas_release.py` e cria a Release com
 `make_latest: false`, para não roubar o apelido `latest` da Release de dados,
-que é onde moram os arquivos nacionais.
+que é onde moram os arquivos nacionais. Tag cuja versão não tem seção no
+CHANGELOG reprova o job.
 
 ## Como reverter
 

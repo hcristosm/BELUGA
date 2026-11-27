@@ -50,6 +50,7 @@ as 34 partições coletadas sem falha. Tamanhos medidos: `setores.pmtiles`
 - fix(docs): o exemplo de `geopandas.read_parquet` por URL não funcionava sem `fsspec`, e o de MapLibre não desenhava os pontos de Recife e de Contagem, porque `type: "fill"` ignora ponto e as duas geometrias estão na mesma camada do PMTiles
 
 ### CHORE
+- chore(ci): as notas da Release de código saem do `CHANGELOG.md` (`scripts/notas_release.py`, com teste), em vez das notas automáticas do GitHub, que listam commits e PRs já visíveis no histórico. Falha se a versão não tiver seção no CHANGELOG
 - docs(readme): README reorganizado em torno de propósito, como usar os dados, fontes e créditos, diferenças de produto, como rodar localmente, limitações e licença. O detalhe de operação foi para `docs/funcionamento.md` e o roadmap saiu
 - chore(deps): dependabot agrupado, um PR por ecossistema e por mês, em vez de um PR por dependência e por semana. Incorpora os bumps que estavam abertos: jsonschema 4.26.0, pyyaml 6.0.3, typer 0.29.2 e ruff 0.17.5
 - chore(deps): `pyarrow` entra como dependência de runtime (GeoParquet) e `duckdb` como de desenvolvimento, com teste que roda a consulta que a documentação promete: exemplo que ninguém executa é exemplo que apodrece

@@ -22,6 +22,17 @@ jobs:
       - name: Empacotar (sdist + wheel)
         run: python -m build
 
+      - name: Notas a partir do CHANGELOG
+        # As notas automáticas do GitHub listam commits e PRs, que já estão no
+        # histórico. Quem lê uma Release quer o CHANGELOG. Falha se a versão
+        # não tiver seção lá: Release com corpo vazio é pior que Release que
+        # não sai, porque ninguém confere o corpo depois.
+        run: |
+          python scripts/notas_release.py \
+            --versao "${GITHUB_REF_NAME}" \
+            --saida notas.md
+          cat notas.md
+
       - name: Criar release e anexar artefatos
         # make_latest: false de propósito. O produto deste repositório é o
         # dado, e as URLs documentadas em docs/usar-os-dados.md usam
@@ -31,5 +42,5 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           files: dist/*
-          generate_release_notes: true
+          body_path: notas.md
           make_latest: "false"

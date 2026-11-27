@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/logo/beluga-header.png" alt="Logo do BELUGA: uma beluga emitindo ondas sonoras, ao lado do nome BELUGA" width="640">
+<img src="docs/logo/beluga-header.webp" alt="Logo do BELUGA: uma beluga emitindo ondas sonoras, ao lado do nome BELUGA" width="640">
 
 *Brazilian External Landslide & Unmapped Geohazard Archive*
 
@@ -167,7 +167,7 @@ fonte**, informada no catálogo, no `manifest.json` e em cada setor
 (`bl_licenca`).
 
 <div align="center">
-<img src="docs/logo/beluga-icone.png" alt="Ícone do BELUGA" width="120">
+<img src="docs/logo/beluga-marca.png" alt="Marca do BELUGA: uma beluga emitindo ondas sonoras" width="120">
 
 Projeto irmão do [ORCA](https://github.com/hcristosm/ORCA).
 </div>

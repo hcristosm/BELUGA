@@ -20,6 +20,21 @@ Se você vai consumir isto num programa, leia também
 | CSV | planilha e quem só quer a tabela | `.../releases/latest/download/setores.csv` |
 | Shapefile por UF | ferramenta que só lê Shapefile | `.../releases/latest/download/setores_<uf>.zip` |
 
+Tamanhos da coleta de 2026-11-27, com 21.429 setores, para você escolher o que
+baixar:
+
+| Arquivo | Tamanho |
+|---|---:|
+| `setores.parquet` (país) | 20,5 MB |
+| `setores.csv` (país) | 25,8 MB |
+| `setores.gpkg` (país) | 61,3 MB |
+| `setores.pmtiles` (país) | 77,3 MB, lido por faixa de bytes, não baixado inteiro |
+| `setores_mg.geojson` (maior UF) | 21,8 MB |
+| `setores_mg.zip` (Shapefile) | 5,4 MB |
+
+O GeoParquet é o menor por setor e o mais rápido de filtrar. Se você quer uma
+UF só, o GeoJSON dela é menor que qualquer arquivo nacional.
+
 `releases/latest/download/` aponta sempre para a coleta mais recente. O release
 de código (`v1.0.0` e os seguintes) é publicado com `make_latest: false`
 justamente para não roubar esse apelido.

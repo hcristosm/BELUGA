@@ -192,6 +192,15 @@ seguinte.
 Os passos 7 e 8 **não** usam `force_orphan`, de propósito: histórico é a rede
 de segurança atrás da guarda, e é o que permite um `git revert`.
 
+Isso tem um preço que vale ter medido. A publicação de 2026-11-27 ocupa **158
+MB** em `v1/`, dos quais **77 MB são o `setores.pmtiles`**, que é binário e é
+regerado inteiro todo mês. A coleta é mensal, então a `gh-pages` cresce por
+volta de 1,9 GB por ano. O site servido é um instantâneo e fica longe do limite
+de 1 GB do Pages; o que cresce é o histórico da branch. Quando incomodar, o
+conserto é truncar o histórico da `gh-pages`, porque o dado autoritativo está
+na Release de cada coleta e na `dados-base`. A alternativa, se o tamanho
+apertar antes disso, é baixar `PMTILES_ZOOM_MAX` de 14 para 12.
+
 ### `release.yml`
 
 Dispara em tag `v*`: `python -m build` (sdist e wheel) e cria a Release com

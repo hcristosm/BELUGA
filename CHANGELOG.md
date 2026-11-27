@@ -9,7 +9,12 @@ O projeto segue [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
-## [1.0.0] - 2026-11-26
+## [1.0.0] - 2026-11-27
+
+Primeira publicação do BELUGA: **21.429 setores em 27 UFs**, de 7 fontes, com
+as 34 partições coletadas sem falha. Tamanhos medidos nesta coleta:
+`setores.pmtiles` 77,3 MB, `setores.gpkg` 61,3 MB, `setores.csv` 25,8 MB,
+`setores.parquet` 20,5 MB, e 158 MB em `v1/` no total.
 
 ### FEATURES
 - feat(export): GeoPackage, GeoParquet e CSV nacionais, e PMTiles do país inteiro, além do GeoJSON e do Shapefile por UF. Cada arquivo entra no `manifest.json` com tamanho, sha256 e URL estável, na chave nova `arquivos`. O PMTiles fica no Pages, porque é lido por requisição Range e precisa de CORS; os agregados vão para a Release, porque o `gh-pages` guarda histórico e o git recusa arquivo acima de 100 MiB

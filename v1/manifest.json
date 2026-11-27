@@ -2,7 +2,7 @@
   "contrato": "v1",
   "versao_esquema": "1.1.0",
   "beluga_versao": "1.0.0",
-  "gerado_em": "2026-11-27T02:46:05+00:00",
+  "gerado_em": "2026-11-27T02:58:21+00:00",
   "crs": "EPSG:4326",
   "total_setores": 21429,
   "colunas": [
@@ -188,7 +188,7 @@
       "arquivo": "setores_mg.geojson",
       "setores": 5692,
       "bytes": 21773686,
-      "sha256": "dc1da69d0dc661fc3898266ee66e3de8d062505cde0976dea2305be94a7c5fcd",
+      "sha256": "09bc9ad4d32dbfa48c43d421a76920ed9f9c960bcb29a1e8e3f8a8b728dc5df4",
       "por_fonte": {
         "br-sgb-setorizacao": 3695,
         "mg-belo-horizonte-pbh": 665,
@@ -426,26 +426,26 @@
     "pmtiles": {
       "arquivo": "setores.pmtiles",
       "url": "https://hcristosm.github.io/BELUGA/v1/setores.pmtiles",
-      "bytes": 77332480,
-      "sha256": "4e12b25c1f6cb02c8a11a9210de0f52c616c4ae747d297b659f6478af97811b9"
+      "bytes": 62517956,
+      "sha256": "62a7d50ae73c9265ce28c198a443b492091f9a97ee451f3c7dace9bc2b6bce64"
     },
     "gpkg": {
       "arquivo": "setores.gpkg",
       "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores.gpkg",
       "bytes": 61304832,
-      "sha256": "f95ed14dc6186d70c84e01cdb120d51e8e79dd82f89c27bc5656ad4b3f5a5ef9"
+      "sha256": "30c98a280698e6bda153ff8dec42b05f1ab3c30c6ed07a7e3e4306955a81c866"
     },
     "parquet": {
       "arquivo": "setores.parquet",
       "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores.parquet",
-      "bytes": 20475355,
-      "sha256": "cb65ccb28f379bf80f33637a3aa2986db2fcc6bef89e6aa757bfb2f7da8d6101"
+      "bytes": 20475357,
+      "sha256": "fe4bd9d0af7d3994dffb05c23a1fec333aad1b9ca733d943c1e1a084a1f0099d"
     },
     "csv": {
       "arquivo": "setores.csv",
       "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores.csv",
       "bytes": 25837277,
-      "sha256": "eba73e0891f9f175f0fa33cb1abed1407fbd303f2589d27a7bc6b841816baae7"
+      "sha256": "3b7eeb970df50dd973c5780e5d5d49ed068ec93a8f397d583bcd2103ae0d1cbc"
     },
     "shapefile": {
       "por_uf": {
@@ -453,163 +453,163 @@
           "arquivo": "setores_ac.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ac.zip",
           "bytes": 187857,
-          "sha256": "8bdf5147dad577cc4c02a49ffbcbec1d832837284d439f7a68262e8cd514b703"
+          "sha256": "45ca7bfe7f99b05d9d768fc3859a913a8308e94d6d3d7ce31717dee42c42346d"
         },
         "al": {
           "arquivo": "setores_al.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_al.zip",
           "bytes": 182258,
-          "sha256": "3e66d7593e44ca1c9d23fc8acd1a8aec7ae88c15efb98f3c210e08a3dd513d68"
+          "sha256": "22203b9c94460194f3cb56f4d95e759fbb2c3468033cc55b50cfc0ada4a58aaa"
         },
         "am": {
           "arquivo": "setores_am.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_am.zip",
           "bytes": 711617,
-          "sha256": "8687b1ea14a6c8457788f7bc56d2aec1870e2390a5ba7f87025af4d6e4042200"
+          "sha256": "c33e56fb3239b71130044da78b929f2f2c6a1c011ed0fe3fddb93d6786c27a2d"
         },
         "ap": {
           "arquivo": "setores_ap.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ap.zip",
           "bytes": 59383,
-          "sha256": "ff1f265507f9014f57d3992ac50c8a0cbf111b9f5d85f4606aa58799646babb9"
+          "sha256": "ee79cc97c23b2a01e76207948b860a8a421f81d115183e1979a07d1b0496505f"
         },
         "ba": {
           "arquivo": "setores_ba.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ba.zip",
           "bytes": 642704,
-          "sha256": "b5d05f650869451c2029c69c2714cb4ded691ef6da39fa70bcbb21744cdf999e"
+          "sha256": "2e0b0d92f280a8c79b55e950b92692240c9f32ca88bcbda7c4e95853651f5426"
         },
         "ce": {
           "arquivo": "setores_ce.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ce.zip",
           "bytes": 357296,
-          "sha256": "d1402ccac33ab6d5fc76863e00979da98b55704cd6e757a53ac1bf03485d08dc"
+          "sha256": "9a585a45c12299cceafa857e935f711d7b457b1cf5f4de90d840dfc4c772d405"
         },
         "df": {
           "arquivo": "setores_df.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_df.zip",
           "bytes": 10393,
-          "sha256": "39b492da057b2fb40100758b965adc3204f0a3d845755794a5791bafca117e1c"
+          "sha256": "2993e8f2fcd7b9ce1c4c5556858c545c9496d235875124366c86106b40638adb"
         },
         "es": {
           "arquivo": "setores_es.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_es.zip",
           "bytes": 1041670,
-          "sha256": "15d72054a54dc3690866d88b860de1f9991982778801a13b0efce4dc8787552d"
+          "sha256": "7d24b806e40b923aa7ff85d4b52126741ca8b20cd98be092f640bf8f685ef2c8"
         },
         "go": {
           "arquivo": "setores_go.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_go.zip",
           "bytes": 260622,
-          "sha256": "b7541a329a206c4f3ce8f845ccb86f43a68b5140e5a4214b445f204272e2375f"
+          "sha256": "296f3f19e01b595dbe128d64d76f4958000b655808621ca0ef8c9e2823179f96"
         },
         "ma": {
           "arquivo": "setores_ma.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ma.zip",
           "bytes": 419795,
-          "sha256": "5c7c1b7dad968b7a2c594337f13ae370443e57a60aa03472c778c931f68f0118"
+          "sha256": "d76eb4588e06c584b16b20bbdcd11775b9a41cb2ce139c6dcc21c25a3a03fb8f"
         },
         "mg": {
           "arquivo": "setores_mg.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_mg.zip",
-          "bytes": 5427652,
-          "sha256": "65214aeeeb8e54f012f7131d41d29635a1558f848f483e655560a0ae62804081"
+          "bytes": 5427655,
+          "sha256": "f701805d604edc7f8a9bf423e97ef5317baf17a12b40d43690018158a0ae8a77"
         },
         "ms": {
           "arquivo": "setores_ms.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ms.zip",
           "bytes": 39493,
-          "sha256": "f6194ed6b374805d17ab3003c2520b28d0b3f28d033a968caaa63351826faf6a"
+          "sha256": "3a80a237990107e074b53c8c98ef69982f8c86e7d9f69c24152678622b074292"
         },
         "mt": {
           "arquivo": "setores_mt.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_mt.zip",
           "bytes": 80768,
-          "sha256": "7b97bad10e5a8a25b6b7217236e695159513a9a0cad07ab8fb559bd6aaa3a5a1"
+          "sha256": "9402d80cd1c950904bbed75902cde7d2b5c502b637250223fb2f08f9916bd87f"
         },
         "pa": {
           "arquivo": "setores_pa.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_pa.zip",
           "bytes": 961070,
-          "sha256": "dc56fc86b089670b538c86b1afd08a8047283c918ffc33bba00a7dd4483175d6"
+          "sha256": "50da9aa2e154520c74f27ccbdfee8984c6705af8a20a1fac72f9038cfa3ab546"
         },
         "pb": {
           "arquivo": "setores_pb.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_pb.zip",
           "bytes": 136347,
-          "sha256": "bcf0d18f568e65dc39c5b23006411054969806cab7b20c21427142501ffda72d"
+          "sha256": "28224b7fa46b0d8e5f8a0aac5916a71db9fd49e3a788fa2208abdf8d14f2ae5a"
         },
         "pe": {
           "arquivo": "setores_pe.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_pe.zip",
           "bytes": 871998,
-          "sha256": "ccf9c8f7eb788b8caa96048ddba7b692ad93a500c644a2b8db7b58cc43d937d1"
+          "sha256": "d4f5cb85ba150022cac9d7ce44ea02da48b70467e4d4c85fc51904ec07409a92"
         },
         "pi": {
           "arquivo": "setores_pi.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_pi.zip",
           "bytes": 140559,
-          "sha256": "f66b5832a81740a39eb8de9b5f3a0bc096a4f58f321d908e542e354e48265904"
+          "sha256": "71d4f324ee5ac2db23aeaef7ad6f7202986d721987241b6d7a544309036d3592"
         },
         "pr": {
           "arquivo": "setores_pr.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_pr.zip",
           "bytes": 197514,
-          "sha256": "b439415bec04ed656dd7556f7c4135544a3e85cc8f6a6e1ba5ee2faab5fe7f03"
+          "sha256": "a800e7ca65e30da767b084cb6c54169bd3105f7a77b185febf7653c06bb6a59e"
         },
         "rj": {
           "arquivo": "setores_rj.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_rj.zip",
           "bytes": 658113,
-          "sha256": "2014f257fa1605a33de0ed09f01583fef35eae8de5bfeb0040fce6b4d64083e6"
+          "sha256": "7efd47b1a6347e815f58a28e22e680cac7dfb843b2782ca2a8077d95c559b9fa"
         },
         "rn": {
           "arquivo": "setores_rn.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_rn.zip",
           "bytes": 63231,
-          "sha256": "73c4380b6445a6c0e3280b2a445f29505960a17c08f908d0f352f8963f42f2ec"
+          "sha256": "332195e200d1e542f2d22b87e490a4bb54661a6a7b27652582e026ce3f97a722"
         },
         "ro": {
           "arquivo": "setores_ro.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ro.zip",
           "bytes": 704803,
-          "sha256": "b25622a06ee3d928b240ed5db0ea67b140c760a93a385f618f756bdd436a5b2d"
+          "sha256": "9bf182de34af7e105400837478724c61e22a9a03461d99244ce9813a25826d42"
         },
         "rr": {
           "arquivo": "setores_rr.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_rr.zip",
           "bytes": 19838,
-          "sha256": "7c045ea01c6b9d627357b06d59f7a3879e0fbe2b3e4f4ea3067b02a456068e06"
+          "sha256": "c4b81f54f2fdc9f69c5d2a1fa886a4fee9cd120a9b92872b90b23c02236354ac"
         },
         "rs": {
           "arquivo": "setores_rs.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_rs.zip",
           "bytes": 1522310,
-          "sha256": "f7b8efaa231099aa3b88036038e5a08251299b624b0f331044503df4a503d654"
+          "sha256": "5bd4bd2ca24cc8ff4f60bb1c9760b5facd2dbf299b20184da936a43e5c22cfd4"
         },
         "sc": {
           "arquivo": "setores_sc.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_sc.zip",
           "bytes": 2905669,
-          "sha256": "fe0aeac5e9f72bceac204da3d129edd7f800fcef972375606ff1539eabec1851"
+          "sha256": "0717cceb201c310e975c48a33639a0de9dfe849354272f268e65f247d168b396"
         },
         "se": {
           "arquivo": "setores_se.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_se.zip",
           "bytes": 84923,
-          "sha256": "5d724696d4fc214091be125ed085516870cc1a1ff1262e264b3cb6998d7f81ec"
+          "sha256": "b7eddecc10052339a965f6b24ebd994f363eeb33724def10098fcf3ab01bc87b"
         },
         "sp": {
           "arquivo": "setores_sp.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_sp.zip",
           "bytes": 773525,
-          "sha256": "5bfee250feaa325aa7334cc1ca91853895a548575168128ff221e6822dfc6538"
+          "sha256": "59beaebd6d2d8f947648fab7f9a849638e3ef8adff045607e48f900db0c2826b"
         },
         "to": {
           "arquivo": "setores_to.zip",
           "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_to.zip",
           "bytes": 6416,
-          "sha256": "ad6441505dca666d33e34aae8389963097357fd20af3cbb3b4886670eaab39c6"
+          "sha256": "006d7cd7dac66289cfd3048a9bda7c89a37d657685cde8b9896d24d23254d964"
         }
       }
     }
@@ -697,7 +697,7 @@
       },
       "ultima_verificacao": "2026-11-21",
       "notas": "73 setores de R2 a R4 do PMRR de Congonhas. A CPRM tem 24 setores no município. Os atributos são só setor, grau e processo.",
-      "coletado_em": "2026-11-27T02:43:48+00:00",
+      "coletado_em": "2026-11-27T02:56:35+00:00",
       "setores_publicados": 73
     },
     {

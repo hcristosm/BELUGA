@@ -73,7 +73,9 @@ jobs:
         # existe para repetir. Degradar em silêncio é o que não pode.
         if: "!cancelled()"
         run: |
-          sudo apt-get update -qq
+          # Uma retentativa, porque mirror intermitente do apt custaria o mês
+          # inteiro do dado, não só os tiles.
+          sudo apt-get update -qq || sudo apt-get update -qq
           sudo apt-get install -y -qq tippecanoe
           tippecanoe --version
 
@@ -130,26 +132,31 @@ jobs:
           user_email: "github-actions[bot]@users.noreply.github.com"
           commit_message: "chore(gh-pages): publicar setores v1"
 
-      - name: Empacotar bruto e Shapefiles
+      - name: Empacotar bruto e agregados
         if: "!cancelled() && steps.conferir.outputs.publicar == 'true'"
         id: pacote
         run: |
+          set -euo pipefail
           data=$(date -u +%Y-%m-%d)
-          echo "tag=dados-${data}-${GITHUB_RUN_ID}" >> "$GITHUB_OUTPUT"
+          tag="dados-${data}-${GITHUB_RUN_ID}"
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
           mkdir -p release
           (cd data && zip -qr "../release/bruto_${data}.zip" bruto)
-          cp data/release/shp/*.zip release/
-          # Agregados nacionais. O GeoPackage passa de 100 MiB e por isso não
-          # cabe no git (nem no gh-pages); asset de Release aceita até 2 GB.
-          cp data/release/setores.gpkg data/release/setores.parquet data/release/setores.csv release/
-          cp docs/visualizador/v1/manifest.json release/manifest.json
+          python scripts/empacotar_release.py \
+            --manifesto docs/visualizador/v1/manifest.json \
+            --origem data/release \
+            --destino release \
+            --tag "$tag"
           ls -la release
 
       - name: Criar Release de dados
         # Release imutável por coleta: o bruto sem alteração (com sha256 no
         # manifest de cada fonte), os Shapefiles por UF e os agregados
         # nacionais (GeoPackage, GeoParquet e CSV).
-        if: "!cancelled() && steps.conferir.outputs.publicar == 'true'"
+        # `!cancelled()` é verdadeiro depois de um passo que falhou, então a
+        # condição olha o resultado do empacotamento: Release incompleta que
+        # rouba o `latest` é pior que Release nenhuma.
+        if: "steps.pacote.outcome == 'success' && steps.conferir.outputs.publicar == 'true'"
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.pacote.outputs.tag }}
@@ -160,6 +167,21 @@ jobs:
           # é onde moram o GeoPackage, o GeoParquet e o CSV nacionais.
           make_latest: "true"
 
+      - name: Conferir que latest aponta para esta Release
+        # Todas as URLs de docs/usar-os-dados.md dependem disto. Input
+        # desconhecido em `with:` só gera warning no Actions, então o
+        # `make_latest` não pode ser tomado como garantido: confira.
+        if: "steps.pacote.outcome == 'success' && steps.conferir.outputs.publicar == 'true'"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ESPERADA: ${{ steps.pacote.outputs.tag }}
+        run: |
+          atual=$(gh api "repos/${GITHUB_REPOSITORY}/releases/latest" --jq .tag_name)
+          echo "latest = ${atual} (esperada: ${ESPERADA})"
+          if [ "$atual" != "$ESPERADA" ]; then
+            echo "::error::releases/latest aponta para ${atual}. As URLs documentadas vão dar 404."
+            exit 1
+          fi
 
       - name: Reprovar se alguma coleta falhou
         # Publicação parcial é aceitável; esconder a falha, não.

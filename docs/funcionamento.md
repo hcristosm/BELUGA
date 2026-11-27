@@ -47,6 +47,7 @@ docs/
   visualizador/             mapa estático (HTML/JS, Leaflet); v1/ é gerado
 scripts/
   conferir_publicacao.py    guarda anti-regressão (a mesma do ORCA)
+  empacotar_release.py      monta o diretório da Release a partir do manifest
   gerar_municipios_ibge.py  atualiza o catálogo de municípios
   rodar_visualizador.sh     servidor local do visualizador
 ```
@@ -96,7 +97,7 @@ uma coleta anterior que o manifest não lista.
 
 ## O que protege a publicação
 
-Cinco camadas, de fora para dentro. Nenhuma delas é redundante com outra.
+Cinco camadas, de fora para dentro.
 
 **1. O coletor recusa resposta suspeita.** Corpo vazio, HTML no lugar do
 arquivo (portal fora do ar que responde 200 com uma página), GeoJSON sem
@@ -175,8 +176,18 @@ Mensal, dia 1 às 03:00 UTC (antes do ingest do ORCA, às 06:00), e por
 | 6 | Conferir antes de publicar | a guarda. Na 1ª execução passa `--anterior 0` explícito |
 | 7 | Publicar normalizados em `dados-base` | **com histórico**, sem `force_orphan` |
 | 8 | Publicar visualizador e dados no `gh-pages` | idem |
-| 9 | Empacotar e criar Release de dados | bruto, Shapefiles, agregados nacionais e o manifest, com `make_latest: true` |
-| 10 | Reprovar se alguma coleta falhou | deixa o job vermelho sem desfazer a publicação |
+| 9 | Empacotar bruto e agregados | `scripts/empacotar_release.py` copia exatamente o que o manifest lista e reprova se faltar algum |
+| 10 | Criar Release de dados | com `make_latest: true`, e só se o passo 9 passou |
+| 11 | Conferir que `latest` aponta para esta Release | pela API. Input desconhecido em `with:` só gera warning, então o `make_latest` não é tomado como garantido |
+| 12 | Reprovar se alguma coleta falhou | deixa o job vermelho sem desfazer a publicação |
+
+O passo 9 existe porque uma Release incompleta que vira `latest` deixa as URLs
+de [usar-os-dados.md](usar-os-dados.md) dando 404 até a coleta seguinte, e
+nenhuma guarda pegaria isso: a guarda anti-regressão conta setores do manifest
+publicado e não tem opinião sobre o conteúdo da Release. Ele também reescreve
+as URLs do manifest que vai **dentro** da Release, trocando `latest` pela tag
+daquela coleta, porque Release é imutável e ponteiro móvel ali mentiria no mês
+seguinte.
 
 Os passos 7 e 8 **não** usam `force_orphan`, de propósito: histórico é a rede
 de segurança atrás da guarda, e é o que permite um `git revert`.

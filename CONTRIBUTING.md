@@ -44,9 +44,7 @@ python3 -m venv .venv
 ```
 
 Para gerar o PMTiles também é preciso o `tippecanoe`, que não é pacote Python:
-`sudo apt install tippecanoe`. Sem ele, rode `exportar --sem-pmtiles`; o
-`exportar` falha de propósito se o PMTiles for pedido e a ferramenta não
-estiver no PATH.
+`sudo apt install tippecanoe`. Sem ele, rode `exportar --sem-pmtiles`.
 
 Como o projeto funciona por dentro (pipeline, workflows, guardas e como
 reverter) está em [docs/funcionamento.md](docs/funcionamento.md).

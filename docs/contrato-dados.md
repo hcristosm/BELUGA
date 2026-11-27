@@ -13,6 +13,12 @@ nova do caminho (`/v2/`), com o `/v1/` mantido durante a transição.
 | Snapshot de cada coleta | GitHub Release `dados-AAAA-MM-DD-<run>` | reprodutibilidade: bruto, Shapefiles, agregados nacionais e manifest |
 | Última coleta, URL fixa | `https://github.com/hcristosm/BELUGA/releases/latest/download/<arquivo>` | GeoPackage, GeoParquet e CSV nacionais |
 
+No `manifest.json` publicado, `arquivos[*].url` usa esse `latest`, que é
+ponteiro móvel e é o que o consumidor quer. O manifest **anexado a cada
+Release** é reescrito para a tag daquela coleta, porque Release é imutável: um
+ponteiro móvel ali entregaria, no mês seguinte, arquivo cujo sha256 não bate
+com o manifest que a pessoa está lendo.
+
 A Release de dados é publicada com `make_latest: true` e a de código com
 `make_latest: false`, para `releases/latest/download/` resolver sempre para a
 coleta mais recente.
@@ -39,6 +45,10 @@ e o PMTiles, que é lido por requisição Range. Os agregados nacionais
 (`setores.gpkg`, `setores.parquet`, `setores.csv`) e os Shapefiles por UF vão
 para a Release.
 
+O PMTiles é a exceção que custa: é binário, é regerado todo mês e não ganha
+nada de compressão de delta. Se a `gh-pages` ficar grande, o histórico dela é o
+que se trunca, porque o dado autoritativo está na Release e na `dados-base`.
+
 **O PMTiles não serve para contar.** Em zoom baixo o tippecanoe descarta feição
 para o tile caber. A contagem autoritativa é a do `manifest.json`.
 
@@ -53,7 +63,7 @@ latitude, coordenadas com 7 casas decimais. As feições vêm ordenadas por
 {
   "contrato": "v1",
   "versao_esquema": "1.1.0",
-  "beluga_versao": "0.1.0",
+  "beluga_versao": "1.0.0",
   "gerado_em": "2026-11-21T19:04:33+00:00",
   "crs": "EPSG:4326",
   "total_setores": 20913,
@@ -72,12 +82,12 @@ latitude, coordenadas com 7 casas decimais. As feições vêm ordenadas por
     "pmtiles": {
       "arquivo": "setores.pmtiles",
       "url": "https://hcristosm.github.io/BELUGA/v1/setores.pmtiles",
-      "bytes": 18234567, "sha256": "…"
+      "bytes": …, "sha256": "…"
     },
-    "gpkg":    {"arquivo": "setores.gpkg",    "url": "…/releases/latest/download/setores.gpkg",    "bytes": 0, "sha256": "…"},
-    "parquet": {"arquivo": "setores.parquet", "url": "…/releases/latest/download/setores.parquet", "bytes": 0, "sha256": "…"},
-    "csv":     {"arquivo": "setores.csv",     "url": "…/releases/latest/download/setores.csv",     "bytes": 0, "sha256": "…"},
-    "shapefile": {"por_uf": {"mg": {"arquivo": "setores_mg.zip", "url": "…", "bytes": 0, "sha256": "…"}}}
+    "gpkg":    {"arquivo": "setores.gpkg",    "url": "…/releases/latest/download/setores.gpkg",    "bytes": …, "sha256": "…"},
+    "parquet": {"arquivo": "setores.parquet", "url": "…/releases/latest/download/setores.parquet", "bytes": …, "sha256": "…"},
+    "csv":     {"arquivo": "setores.csv",     "url": "…/releases/latest/download/setores.csv",     "bytes": …, "sha256": "…"},
+    "shapefile": {"por_uf": {"mg": {"arquivo": "setores_mg.zip", "url": "…", "bytes": …, "sha256": "…"}}}
   },
   "fontes": [
     {
@@ -99,9 +109,10 @@ existe e por que não veio.
 
 `arquivos` descreve os formatos agregados, com a URL estável, o tamanho e o
 sha256 de cada um. Uma chave ausente significa que aquele formato não foi
-gerado nesta publicação; o arquivo correspondente também sai do ar, porque a
-publicação não usa `force_orphan` e o deploy remove o que não está no
-diretório. Chave nova aqui sobe `versao_esquema` e não quebra ninguém: ignore o
+gerado nesta publicação; o arquivo correspondente também sai do ar, porque o
+deploy não usa `keep_files` e remove do destino o que não está no diretório
+publicado (o `force_orphan`, que a publicação também não usa, é sobre
+histórico, não sobre remoção). Chave nova aqui sobe `versao_esquema` e não quebra ninguém: ignore o
 que você não conhece.
 
 ## Versionamento

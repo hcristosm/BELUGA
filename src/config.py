@@ -78,6 +78,10 @@ def dir_shapefiles(data_dir: Path = DATA_DIR) -> Path:
     return dir_release(data_dir) / "shp"
 
 
+def caminho_shapefile_uf(uf: str, data_dir: Path = DATA_DIR) -> Path:
+    return dir_shapefiles(data_dir) / f"setores_{uf.lower()}.zip"
+
+
 def caminho_gpkg_nacional(data_dir: Path = DATA_DIR) -> Path:
     return dir_release(data_dir) / "setores.gpkg"
 

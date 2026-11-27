@@ -83,7 +83,7 @@ na validação.
 
 ## Diferenças de produto que importam
 
-Não é tudo setorização com grau de risco, e quem consome precisa saber disso.
+Não é tudo setorização com grau de risco.
 
 - **Belo Horizonte** são áreas com tendência a risco, mapeadas em 1996, **sem
   grau de risco** (`bl_produto = area_risco_sem_grau`).

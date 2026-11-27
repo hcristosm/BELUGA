@@ -58,10 +58,10 @@ import geopandas as gpd
 # Uma UF, direto do Pages
 mg = gpd.read_file("https://hcristosm.github.io/BELUGA/v1/setores_mg.geojson")
 
-# O país inteiro, do GeoParquet (bem menor que o GeoJSON)
-br = gpd.read_parquet(
-    "https://github.com/hcristosm/BELUGA/releases/latest/download/setores.parquet"
-)
+# O país inteiro, do GeoParquet (bem menor que o GeoJSON). Ler Parquet por
+# URL exige fsspec (`pip install fsspec requests`); sem ele, baixe primeiro:
+#   curl -LO https://github.com/hcristosm/BELUGA/releases/latest/download/setores.parquet
+br = gpd.read_parquet("setores.parquet")
 
 # Só a CPRM, que é o que o ORCA usava antes de ler o BELUGA
 cprm = br[br["bl_fonte"] == "br-sgb-setorizacao"]
@@ -149,25 +149,31 @@ table(br$bl_fonte)
       type: "vector",
       url: "pmtiles://https://hcristosm.github.io/BELUGA/v1/setores.pmtiles",
     });
+    const corPorGrau = [
+      "match", ["get", "grau_risco"],
+      "Muito alto", "#7f1d1d", "Alto", "#b45309",
+      "Médio", "#a16207", "Baixo", "#4d7c0f",
+      "#6b7280",
+    ];
+    // Polígonos e pontos estão na MESMA camada do PMTiles, e `fill` ignora
+    // ponto. Sem a segunda camada, Recife e Contagem desaparecem do mapa.
     mapa.addLayer({
-      id: "setores", type: "fill", source: "beluga", "source-layer": "setores",
-      paint: {
-        "fill-color": [
-          "match", ["get", "grau_risco"],
-          "Muito alto", "#7f1d1d", "Alto", "#b45309",
-          "Médio", "#a16207", "Baixo", "#4d7c0f",
-          "#6b7280",
-        ],
-        "fill-opacity": 0.6,
-      },
+      id: "setores-area", type: "fill", source: "beluga", "source-layer": "setores",
+      filter: ["!=", ["geometry-type"], "Point"],
+      paint: { "fill-color": corPorGrau, "fill-opacity": 0.6 },
+    });
+    mapa.addLayer({
+      id: "setores-ponto", type: "circle", source: "beluga", "source-layer": "setores",
+      filter: ["==", ["geometry-type"], "Point"],
+      paint: { "circle-radius": 5, "circle-color": corPorGrau, "circle-stroke-width": 1 },
     });
   });
 </script>
 ```
 
-A camada dentro do PMTiles chama `setores`. O PMTiles é lido por requisição
-Range, e por isso fica no GitHub Pages, que serve Range com CORS; a URL de
-download de Release não serve para isso.
+A camada dentro do PMTiles chama `setores`, e tem polígonos e pontos juntos.
+O PMTiles é lido por requisição Range, e por isso fica no GitHub Pages, que
+serve Range com CORS; a URL de download de Release não serve para isso.
 
 ## Licenças
 

@@ -60,6 +60,7 @@ from src.config import (
     caminho_pmtiles,
     caminho_relatorio,
     caminho_setores_uf,
+    caminho_shapefile_uf,
     dir_release,
     dir_shapefiles,
 )
@@ -73,9 +74,12 @@ logger = logging.getLogger(__name__)
 PRECISAO_COORDENADAS = 7  # ~1 cm; basta para setor de risco e encolhe o arquivo
 CASAS_CENTROIDE = 6  # ~10 cm; o centroide do CSV é referência, não geometria
 
-# Zoom do PMTiles. Em z14 um setor de 50 m já tem alguns pixels, e o arquivo
-# fica na casa das dezenas de MB. Abaixo de z5 o país inteiro não cabe num
-# tile sem descartar quase tudo.
+# Zoom do PMTiles. Em z14 um setor de 50 m já tem alguns pixels. O teto é
+# teto mesmo: sem `--extend-zooms-if-still-dropping`, que estenderia o zoom
+# além do -z justamente quando ainda há descarte. O arquivo vai para a
+# `gh-pages`, que guarda histórico, então tamanho previsível vale mais que
+# detalhe extra. Abaixo de z5 o país inteiro não cabe num tile sem descartar
+# quase tudo.
 PMTILES_ZOOM_MIN = 5
 PMTILES_ZOOM_MAX = 14
 PMTILES_CAMADA = "setores"
@@ -95,7 +99,9 @@ def _sha256_arquivo(caminho: Path) -> str:
 
 def _gravar_atomico(texto: str, destino: Path) -> None:
     temporario = destino.with_name(destino.name + ".tmp")
-    temporario.write_text(texto)
+    # encoding explícito: o manifest tem acento ("não declarada"), e
+    # write_text sem encoding usa o locale do processo.
+    temporario.write_text(texto, encoding="utf-8")
     os.replace(temporario, destino)
 
 
@@ -128,12 +134,15 @@ def _gravar_geojson(gdf: gpd.GeoDataFrame, destino: Path) -> None:
     temporario = destino.with_name(destino.name + ".tmp")
     if temporario.exists():
         temporario.unlink()
-    gdf.to_file(
-        temporario, driver="GeoJSON", layer_options={
-            "COORDINATE_PRECISION": PRECISAO_COORDENADAS, "RFC7946": "YES", "WRITE_BBOX": "NO",
-        },
-    )
-    os.replace(temporario, destino)
+    try:
+        gdf.to_file(
+            temporario, driver="GeoJSON", layer_options={
+                "COORDINATE_PRECISION": PRECISAO_COORDENADAS, "RFC7946": "YES", "WRITE_BBOX": "NO",
+            },
+        )
+        os.replace(temporario, destino)
+    finally:
+        temporario.unlink(missing_ok=True)
 
 
 def _sob_cp_como_inteiro(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
@@ -141,18 +150,16 @@ def _sob_cp_como_inteiro(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
 
     Só o Shapefile precisa disto. GeoJSON, GeoPackage e GeoParquet guardam
     booleano com nulo, e os três estados sobrevivem (nulo = setor da própria
-    CPRM, "não se aplica"). No GeoPackage o nulo é NULL de verdade; se o
-    pandas devolver a coluna como real com `nan`, isso é conversão do leitor,
-    não do arquivo.
+    CPRM, "não se aplica").
     """
     saida = gdf.copy()
     saida["bl_sob_cp"] = saida["bl_sob_cp"].map({True: 1, False: 0}).astype("Int64")
     return saida
 
 
-def _gravar_shapefile(gdf: gpd.GeoDataFrame, uf: str, destino_dir: Path) -> Path:
-    destino_dir.mkdir(parents=True, exist_ok=True)
-    zip_path = destino_dir / f"setores_{uf.lower()}.zip"
+def _gravar_shapefile(gdf: gpd.GeoDataFrame, uf: str, data_dir: Path) -> Path:
+    dir_shapefiles(data_dir).mkdir(parents=True, exist_ok=True)
+    zip_path = caminho_shapefile_uf(uf, data_dir)
     # 1 = sobrepõe, 0 = não sobrepõe, vazio = não se aplica (setor da CPRM).
     shp = _sob_cp_como_inteiro(gdf)
     grupos = {
@@ -178,16 +185,22 @@ def _gravar_gpkg(gdf: gpd.GeoDataFrame, destino: Path) -> None:
     temporario = destino.with_name(destino.stem + ".tmp" + destino.suffix)
     if temporario.exists():
         temporario.unlink()
-    gdf.to_file(temporario, driver="GPKG", layer=CAMADA_SETORES)
-    os.replace(temporario, destino)
+    try:
+        gdf.to_file(temporario, driver="GPKG", layer=CAMADA_SETORES)
+        os.replace(temporario, destino)
+    finally:
+        temporario.unlink(missing_ok=True)
 
 
 def _gravar_parquet(gdf: gpd.GeoDataFrame, destino: Path) -> None:
     """GeoParquet nacional. Exige pyarrow (dependência de runtime)."""
     destino.parent.mkdir(parents=True, exist_ok=True)
     temporario = destino.with_name(destino.name + ".tmp")
-    gdf.to_parquet(temporario, compression="zstd")
-    os.replace(temporario, destino)
+    try:
+        gdf.to_parquet(temporario, compression="zstd")
+        os.replace(temporario, destino)
+    finally:
+        temporario.unlink(missing_ok=True)
 
 
 def centroides_do_csv(gdf: gpd.GeoDataFrame) -> pd.DataFrame:
@@ -207,22 +220,30 @@ def centroides_do_csv(gdf: gpd.GeoDataFrame) -> pd.DataFrame:
 
 
 def _gravar_csv(gdf: gpd.GeoDataFrame, destino: Path) -> None:
-    """CSV com os atributos e a lat/lon do centroide, sem geometria."""
+    """CSV com os atributos e a lat/lon do centroide, sem geometria.
+
+    Contagem de edificação, domicílio e pessoa sai como inteiro. `_tipar`
+    força tudo em COLUNAS_NUMERICAS para real por causa do GeoJSON, e "12.0"
+    numa planilha é defeito.
+    """
     destino.parent.mkdir(parents=True, exist_ok=True)
-    tabela = pd.concat(
-        [pd.DataFrame(gdf.drop(columns="geometry")), centroides_do_csv(gdf)], axis=1,
-    )
+    atributos = pd.DataFrame(gdf.drop(columns="geometry"))
+    for coluna in ("num_edif", "num_domi", "num_pess"):
+        atributos[coluna] = atributos[coluna].astype("Int64")
+    tabela = pd.concat([atributos, centroides_do_csv(gdf)], axis=1)
     temporario = destino.with_name(destino.name + ".tmp")
-    tabela.to_csv(temporario, index=False, encoding="utf-8")
-    os.replace(temporario, destino)
+    try:
+        tabela.to_csv(temporario, index=False, encoding="utf-8")
+        os.replace(temporario, destino)
+    finally:
+        temporario.unlink(missing_ok=True)
 
 
 def _gravar_pmtiles(entradas: list[Path], destino: Path) -> None:
     """Tiles vetoriais com o tippecanoe, a partir dos GeoJSON por UF já gravados.
 
-    Falha alto se o tippecanoe não estiver instalado. Gerar a publicação sem
-    PMTiles em silêncio deixaria no ar um arquivo velho que o manifest não
-    lista: quem não tem o tippecanoe passa `--sem-pmtiles` de propósito.
+    Falha alto se o tippecanoe não estiver instalado; quem não tem a
+    ferramenta passa `--sem-pmtiles` de propósito (ver docs/funcionamento.md).
 
     Em zoom baixo o tippecanoe descarta feição para o tile caber
     (`--drop-densest-as-needed`). O PMTiles serve para desenhar mapa, não para
@@ -241,7 +262,7 @@ def _gravar_pmtiles(entradas: list[Path], destino: Path) -> None:
         "tippecanoe", "-o", str(temporario), "--force",
         "-l", PMTILES_CAMADA,
         "-Z", str(PMTILES_ZOOM_MIN), "-z", str(PMTILES_ZOOM_MAX),
-        "--drop-densest-as-needed", "--extend-zooms-if-still-dropping",
+        "--drop-densest-as-needed",
         *[str(e) for e in entradas],
     ]
     try:
@@ -252,11 +273,14 @@ def _gravar_pmtiles(entradas: list[Path], destino: Path) -> None:
         )
     except OSError as exc:
         raise ExportacaoError(f"falha ao executar o tippecanoe: {exc}") from exc
-    if resultado.returncode != 0:
-        raise ExportacaoError(
-            f"tippecanoe saiu com {resultado.returncode}: {resultado.stderr.strip()[-2000:]}"
-        )
-    os.replace(temporario, destino)
+    try:
+        if resultado.returncode != 0:
+            raise ExportacaoError(
+                f"tippecanoe saiu com {resultado.returncode}: {resultado.stderr.strip()[-2000:]}"
+            )
+        os.replace(temporario, destino)
+    finally:
+        temporario.unlink(missing_ok=True)
 
 
 def _descrever(caminho: Path, url_base: str) -> dict[str, Any]:
@@ -307,15 +331,19 @@ def exportar(
     if shapefiles and dir_shapefiles(data_dir).exists():
         for antigo in dir_shapefiles(data_dir).glob("setores_*.zip"):
             antigo.unlink()
-    # Mesma higiene para os agregados: um arquivo de uma coleta anterior que
-    # esta não regerou ficaria no diretório da Release sem constar no manifest.
-    for antigo in (
-        caminho_gpkg_nacional(data_dir),
-        caminho_parquet_nacional(data_dir),
-        caminho_csv_nacional(data_dir),
-        caminho_pmtiles(saida_dir),
-    ):
-        antigo.unlink(missing_ok=True)
+    # Mesma higiene para os agregados, mas só para os que vão ser regerados:
+    # apagar o que esta execução não produz destruiria o arquivo da coleta
+    # anterior sem substituto. O que sai do diretório sai do ar junto, porque
+    # o deploy não usa `keep_files` e remove do destino o que não está aqui.
+    if pmtiles:
+        caminho_pmtiles(saida_dir).unlink(missing_ok=True)
+    if agregados:
+        for antigo in (
+            caminho_gpkg_nacional(data_dir),
+            caminho_parquet_nacional(data_dir),
+            caminho_csv_nacional(data_dir),
+        ):
+            antigo.unlink(missing_ok=True)
 
     ufs: dict[str, Any] = {}
     geojsons: list[Path] = []
@@ -335,7 +363,7 @@ def exportar(
             },
         }
         if shapefiles:
-            _gravar_shapefile(grupo, str(uf), dir_shapefiles(data_dir))
+            _gravar_shapefile(grupo, str(uf), data_dir)
 
     arquivos: dict[str, Any] = {}
     if pmtiles:
@@ -353,7 +381,7 @@ def exportar(
     if shapefiles:
         arquivos["shapefile"] = {
             "por_uf": {
-                uf: _descrever(dir_shapefiles(data_dir) / f"setores_{uf}.zip", URL_RELEASE)
+                uf: _descrever(caminho_shapefile_uf(uf, data_dir), URL_RELEASE)
                 for uf in ufs
             },
         }

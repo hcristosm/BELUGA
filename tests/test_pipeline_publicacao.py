@@ -324,16 +324,38 @@ def test_sem_pmtiles_nao_gera_e_nao_entra_no_manifest(tmp_path, fonte, cliente):
 
 
 @responses.activate
-def test_exportar_remove_agregado_de_coleta_anterior(tmp_path, fonte, cliente):
-    """Agregado que esta coleta não regerou não pode ficar no diretório."""
+def test_exportar_substitui_agregado_de_coleta_anterior(tmp_path, fonte, cliente):
+    """Agregado antigo é substituído, não fica no diretório sem constar no manifest."""
     _servir(_colecao(2))
     coletar_fonte(fonte, cliente, tmp_path)
     velho = caminho_gpkg_nacional(tmp_path)
     velho.parent.mkdir(parents=True, exist_ok=True)
     velho.write_bytes(b"gpkg de ontem")
 
-    exportar([fonte], tmp_path, tmp_path / "v1", shapefiles=False, agregados=False, pmtiles=False)
-    assert not velho.exists()
+    exportar([fonte], tmp_path, tmp_path / "v1", shapefiles=False, pmtiles=False)
+    assert velho.read_bytes() != b"gpkg de ontem"
+
+
+@responses.activate
+def test_sem_agregados_nao_apaga_o_da_coleta_anterior(tmp_path, fonte, cliente):
+    """Apagar o que esta execução não regera destruiria o arquivo anterior sem substituto.
+
+    Vale para o PMTiles também, que é o caso real: `--sem-pmtiles` numa
+    máquina sem tippecanoe não pode tirar do ar o PMTiles que está publicado.
+    """
+    _servir(_colecao(2))
+    coletar_fonte(fonte, cliente, tmp_path)
+    saida = tmp_path / "v1"
+    saida.mkdir(parents=True, exist_ok=True)
+    gpkg_velho = caminho_gpkg_nacional(tmp_path)
+    gpkg_velho.parent.mkdir(parents=True, exist_ok=True)
+    gpkg_velho.write_bytes(b"gpkg de ontem")
+    tiles_velho = caminho_pmtiles(saida)
+    tiles_velho.write_bytes(b"pmtiles de ontem")
+
+    exportar([fonte], tmp_path, saida, shapefiles=False, agregados=False, pmtiles=False)
+    assert gpkg_velho.read_bytes() == b"gpkg de ontem"
+    assert tiles_velho.read_bytes() == b"pmtiles de ontem"
 
 
 def _tippecanoe_falso(diretorio, corpo: str) -> None:
@@ -443,3 +465,37 @@ def test_sob_cp_mantem_os_tres_estados_em_cada_formato(tmp_path, fonte, fonte_cp
     # CSV: os três estados continuam distinguíveis (vazio para a CPRM).
     tabela = pd.read_csv(caminho_csv_nacional(tmp_path))
     assert tabela.loc[tabela["bl_fonte"] == "br-sgb-setorizacao", "bl_sob_cp"].isna().all()
+
+
+@responses.activate
+def test_exemplo_de_duckdb_da_documentacao_funciona(tmp_path, fonte, fonte_cprm, cliente):
+    """A consulta que docs/usar-os-dados.md promete roda, e bate com o manifest.
+
+    É o que justifica o duckdb estar nas dependências de desenvolvimento:
+    exemplo de documentação que ninguém executa é exemplo que apodrece.
+    """
+    duckdb = pytest.importorskip("duckdb")
+
+    _servir(_colecao(3))
+    coletar_fonte(fonte, cliente, tmp_path)
+    responses.reset()
+    _servir_cprm({"MG": 2})
+    coletar_fonte(fonte_cprm, cliente, tmp_path, ufs=["MG"])
+
+    manifesto = exportar([fonte, fonte_cprm], tmp_path, tmp_path / "v1", pmtiles=False)
+    parquet = caminho_parquet_nacional(tmp_path)
+
+    con = duckdb.connect()
+    try:
+        por_fonte = dict(con.execute(
+            "SELECT bl_fonte, count(*) FROM read_parquet(?) GROUP BY 1",
+            [str(parquet)],
+        ).fetchall())
+        total = con.execute(
+            "SELECT count(*) FROM read_parquet(?)", [str(parquet)],
+        ).fetchone()[0]
+    finally:
+        con.close()
+
+    assert total == manifesto["total_setores"]
+    assert por_fonte == manifesto["ufs"]["mg"]["por_fonte"]

@@ -31,7 +31,18 @@ O projeto segue [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 - feat(visualizador): mapa estático (HTML/JS, Leaflet) para conferir os setores agregados, com filtros por fonte, grau e sobreposição, ficha de proveniência, catálogo e relatório de validação
 - feat(ci): workflow mensal de coleta e publicação (dados-base, gh-pages e Release de dados) com a guarda anti-regressão do ORCA, e CI com ruff, mypy, bandit, catálogo e pytest
 
+### FIXES
+- fix(ci): o manifest anexado a cada Release de dados passa a apontar para a tag daquela coleta, não para `releases/latest/download/`. Release é imutável, e o ponteiro móvel entregaria, no mês seguinte, arquivo cujo sha256 não bate com o manifest que a pessoa está lendo
+- fix(ci): a Release de dados só é criada se o empacotamento passou. A condição era `!cancelled()`, que é verdadeiro depois de um passo que falhou, então um `cp` que falhasse criaria uma Release incompleta com `make_latest: true`, e as URLs documentadas dariam 404 por um mês sem nenhuma guarda recusar
+- fix(ci): `scripts/empacotar_release.py` copia exatamente o que o manifest lista e reprova se faltar algum arquivo, com teste. Era `cp` em glob, que não conferia nada. Um passo novo confere pela API que `releases/latest` é mesmo a Release de dados, porque input desconhecido em `with:` só gera warning no Actions
+- fix(export): a higiene que apaga arquivo de coleta anterior só apaga o que esta execução vai regerar. Antes, `--sem-pmtiles` destruía o PMTiles publicado sem substituto
+- fix(export): os cinco escritores limpam o `.tmp` em caminho de erro
+- fix(export): o PMTiles deixa de usar `--extend-zooms-if-still-dropping`, que estenderia o zoom além do `-z14` justamente quando ainda há descarte. O arquivo vai para a `gh-pages`, que guarda histórico, então tamanho previsível vale mais que detalhe extra
+- fix(export): `num_edif`, `num_domi` e `num_pess` saem como inteiro no CSV, não como `12.0`
+- fix(export): `_gravar_atomico` grava com `encoding="utf-8"` explícito. Dependia do locale do processo, e o manifest tem acento
+- fix(docs): o exemplo de `geopandas.read_parquet` por URL não funcionava sem `fsspec`, e o de MapLibre não desenhava os pontos de Recife e de Contagem, porque `type: "fill"` ignora ponto e as duas geometrias estão na mesma camada do PMTiles
+
 ### CHORE
 - docs(readme): README reorganizado em torno de propósito, como usar os dados, fontes e créditos, diferenças de produto, como rodar localmente, limitações e licença. O detalhe de operação foi para `docs/funcionamento.md` e o roadmap saiu
 - chore(deps): dependabot agrupado, um PR por ecossistema e por mês, em vez de um PR por dependência e por semana. Incorpora os bumps que estavam abertos: jsonschema 4.26.0, pyyaml 6.0.3, typer 0.29.2 e ruff 0.17.5
-- chore(deps): `pyarrow` entra como dependência de runtime (GeoParquet), e `duckdb` e `pmtiles` como de desenvolvimento, para conferir os exemplos da documentação
+- chore(deps): `pyarrow` entra como dependência de runtime (GeoParquet) e `duckdb` como de desenvolvimento, com teste que roda a consulta que a documentação promete: exemplo que ninguém executa é exemplo que apodrece

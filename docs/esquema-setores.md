@@ -1,4 +1,4 @@
-# Esquema dos setores (versão 1.0.0)
+# Esquema dos setores (versão 1.1.0)
 
 Cada setor publicado tem as colunas abaixo, nesta ordem, e a geometria em
 EPSG:4326. Todo nome tem no máximo 10 caracteres, o limite do DBF, para o mesmo

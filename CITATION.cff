@@ -16,7 +16,7 @@ authors:
     family-names: Leptokarydis
     orcid: "https://orcid.org/0009-0000-5877-5763"
     alias: hcristosm
-version: 1.0.0
+version: 1.1.0
 date-released: "2026-11-27"
 license: AGPL-3.0-or-later
 repository-code: "https://github.com/hcristosm/BELUGA"

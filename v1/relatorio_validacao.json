@@ -1,0 +1,81 @@
+{
+  "total_entrada": 21429,
+  "total_publicado": 21429,
+  "avisos_globais": [],
+  "por_fonte": {
+    "br-sgb-setorizacao": {
+      "entrada": 18890,
+      "publicados": 18890,
+      "erros": {},
+      "avisos": {
+        "fora do município declarado": 13
+      },
+      "exemplos": {
+        "fora do município declarado": [
+          "AL_QUEBRAN_SR_005_CPRM",
+          "BA_LAURODE_SR_08_CPRM",
+          "BA_LAURODE_SR_15_CPRM",
+          "CE_PEN_SR_3_CPRM",
+          "MA_IM_SR_02_CPRM",
+          "MA_SAOLUIS_SR_84_CPRM",
+          "MG_CAPELIN_SR_011_CPRM",
+          "PA_SJA_SR_03_CPRM",
+          "PE_CORTES_SR_17_CPRM",
+          "PE_CORTES_SR_18_CPRM",
+          "PE_CORTES_SR_19_CPRM",
+          "PE_JABOATA_SR_133_CPRM",
+          "PE_TIMBAUB_SR_3_CPRM"
+        ]
+      }
+    },
+    "mg-belo-horizonte-pbh": {
+      "entrada": 665,
+      "publicados": 665,
+      "erros": {},
+      "avisos": {},
+      "exemplos": {}
+    },
+    "mg-congonhas-pmrr": {
+      "entrada": 73,
+      "publicados": 73,
+      "erros": {},
+      "avisos": {},
+      "exemplos": {}
+    },
+    "mg-contagem-defesa-civil-2024": {
+      "entrada": 265,
+      "publicados": 265,
+      "erros": {},
+      "avisos": {
+        "fora do município declarado": 1
+      },
+      "exemplos": {
+        "fora do município declarado": [
+          "MG_CTG_01-05_BELUGA"
+        ]
+      }
+    },
+    "mg-juiz-de-fora-sspdc": {
+      "entrada": 994,
+      "publicados": 994,
+      "erros": {},
+      "avisos": {},
+      "exemplos": {}
+    },
+    "pe-recife-sedec": {
+      "entrada": 364,
+      "publicados": 364,
+      "erros": {},
+      "avisos": {},
+      "exemplos": {}
+    },
+    "sp-suzano-defesa-civil": {
+      "entrada": 178,
+      "publicados": 178,
+      "erros": {},
+      "avisos": {},
+      "exemplos": {}
+    }
+  },
+  "gerado_em": "2026-11-27T02:46:05+00:00"
+}

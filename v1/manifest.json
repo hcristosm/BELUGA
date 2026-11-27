@@ -1,0 +1,939 @@
+{
+  "contrato": "v1",
+  "versao_esquema": "1.1.0",
+  "beluga_versao": "1.0.0",
+  "gerado_em": "2026-11-27T02:46:05+00:00",
+  "crs": "EPSG:4326",
+  "total_setores": 21429,
+  "colunas": [
+    "num_setor",
+    "uf",
+    "munic",
+    "cd_geocmu",
+    "data_setor",
+    "local",
+    "tipolo_g1",
+    "tipolo_e1",
+    "tipolo_g2",
+    "tipolo_e2",
+    "tipolo_g3",
+    "tipolo_e3",
+    "tipolo_g4",
+    "tipolo_e4",
+    "tipolo_g5",
+    "tipolo_e5",
+    "cobrade_01",
+    "cobrade_02",
+    "cobrade_03",
+    "cobrade_04",
+    "cobrade_05",
+    "descricao",
+    "obs_ocup",
+    "grau_vulne",
+    "grau_risco",
+    "num_edif",
+    "num_domi",
+    "num_pess",
+    "sug_interv",
+    "orgao_exec",
+    "bl_fonte",
+    "bl_id_orig",
+    "bl_num_or",
+    "bl_coleta",
+    "bl_sha256",
+    "bl_produto",
+    "bl_licenca",
+    "bl_grau_or",
+    "bl_tipo_or",
+    "bl_geom_or",
+    "bl_crs_or",
+    "bl_sob_cp",
+    "bl_cp_set",
+    "bl_cp_frac"
+  ],
+  "ufs": {
+    "ac": {
+      "arquivo": "setores_ac.geojson",
+      "setores": 164,
+      "bytes": 762560,
+      "sha256": "412493f248f3a09596ccfa20175cd5913419e8bb646289507998a4a7eb47400d",
+      "por_fonte": {
+        "br-sgb-setorizacao": 164
+      },
+      "por_grau": {
+        "Alto": 95,
+        "Muito alto": 47,
+        "Médio": 22
+      }
+    },
+    "al": {
+      "arquivo": "setores_al.geojson",
+      "setores": 220,
+      "bytes": 718666,
+      "sha256": "5008da8348c8d8eb30eff64b2ba76f071ea978ef9a963c7b993b68e68e8b6684",
+      "por_fonte": {
+        "br-sgb-setorizacao": 220
+      },
+      "por_grau": {
+        "Alto": 164,
+        "Muito alto": 56
+      }
+    },
+    "am": {
+      "arquivo": "setores_am.geojson",
+      "setores": 799,
+      "bytes": 3050781,
+      "sha256": "135b011dc3b0fc6184a15b614c52350e0d8c7403f123b01f25e42d890a37bfbd",
+      "por_fonte": {
+        "br-sgb-setorizacao": 799
+      },
+      "por_grau": {
+        "Alto": 557,
+        "Muito alto": 242
+      }
+    },
+    "ap": {
+      "arquivo": "setores_ap.geojson",
+      "setores": 48,
+      "bytes": 180947,
+      "sha256": "e32e2742c9eb2255a7df6d8fa22a649412273673bf635731521090098989ff03",
+      "por_fonte": {
+        "br-sgb-setorizacao": 48
+      },
+      "por_grau": {
+        "Alto": 38,
+        "Muito alto": 10
+      }
+    },
+    "ba": {
+      "arquivo": "setores_ba.geojson",
+      "setores": 846,
+      "bytes": 2666914,
+      "sha256": "673a2542dff08cd1d827f85c310040b8486aea3c700f4eba86c605c346434c62",
+      "por_fonte": {
+        "br-sgb-setorizacao": 846
+      },
+      "por_grau": {
+        "Alto": 496,
+        "Muito alto": 350
+      }
+    },
+    "ce": {
+      "arquivo": "setores_ce.geojson",
+      "setores": 459,
+      "bytes": 1475199,
+      "sha256": "702fc9882c393073a0aec5ff5d0172353492b3988100d10a1b2c343383fbb9bd",
+      "por_fonte": {
+        "br-sgb-setorizacao": 459
+      },
+      "por_grau": {
+        "Alto": 322,
+        "Muito alto": 137
+      }
+    },
+    "df": {
+      "arquivo": "setores_df.geojson",
+      "setores": 22,
+      "bytes": 65947,
+      "sha256": "250cdcd96f9fb1bb51592d8e8d7cd4a03978c08ad53d2c768c7d25ee8384cb32",
+      "por_fonte": {
+        "br-sgb-setorizacao": 22
+      },
+      "por_grau": {
+        "Alto": 20,
+        "Muito alto": 2
+      }
+    },
+    "es": {
+      "arquivo": "setores_es.geojson",
+      "setores": 1315,
+      "bytes": 4918768,
+      "sha256": "c42cbdc624c573a8bda99eb50cdc6c7413c18939f6364da709362eaa8a5bd083",
+      "por_fonte": {
+        "br-sgb-setorizacao": 1315
+      },
+      "por_grau": {
+        "Alto": 860,
+        "Muito alto": 455
+      }
+    },
+    "go": {
+      "arquivo": "setores_go.geojson",
+      "setores": 231,
+      "bytes": 1242833,
+      "sha256": "c3290b414ab6e14c95ed384fa86843e965ecff304a2e7e4d60be2ad27df66808",
+      "por_fonte": {
+        "br-sgb-setorizacao": 231
+      },
+      "por_grau": {
+        "Alto": 142,
+        "Muito alto": 45,
+        "Médio": 44
+      }
+    },
+    "ma": {
+      "arquivo": "setores_ma.geojson",
+      "setores": 379,
+      "bytes": 1441329,
+      "sha256": "9489adbfa89d8a2a5a179b8cb8691a198b3fb390e12d432d77c10b92bdb2e3d1",
+      "por_fonte": {
+        "br-sgb-setorizacao": 379
+      },
+      "por_grau": {
+        "Alto": 268,
+        "Muito alto": 111
+      }
+    },
+    "mg": {
+      "arquivo": "setores_mg.geojson",
+      "setores": 5692,
+      "bytes": 21773686,
+      "sha256": "dc1da69d0dc661fc3898266ee66e3de8d062505cde0976dea2305be94a7c5fcd",
+      "por_fonte": {
+        "br-sgb-setorizacao": 3695,
+        "mg-belo-horizonte-pbh": 665,
+        "mg-congonhas-pmrr": 73,
+        "mg-contagem-defesa-civil-2024": 265,
+        "mg-juiz-de-fora-sspdc": 994
+      },
+      "por_grau": {
+        "Alto": 3364,
+        "Baixo": 155,
+        "Muito alto": 976,
+        "Médio": 414,
+        "sem grau": 783
+      }
+    },
+    "ms": {
+      "arquivo": "setores_ms.geojson",
+      "setores": 42,
+      "bytes": 151595,
+      "sha256": "b0ae3d55bab00ddea3d0f1354abbc151ed0f1d8caf6eb9ce1e259b7d366d13eb",
+      "por_fonte": {
+        "br-sgb-setorizacao": 42
+      },
+      "por_grau": {
+        "Alto": 39,
+        "Muito alto": 3
+      }
+    },
+    "mt": {
+      "arquivo": "setores_mt.geojson",
+      "setores": 189,
+      "bytes": 522091,
+      "sha256": "5eace1566266e51c372dd654820389472239facdb0af256a9a27f3c3c9241cb3",
+      "por_fonte": {
+        "br-sgb-setorizacao": 189
+      },
+      "por_grau": {
+        "Alto": 128,
+        "Muito alto": 61
+      }
+    },
+    "pa": {
+      "arquivo": "setores_pa.geojson",
+      "setores": 1128,
+      "bytes": 4115969,
+      "sha256": "d08c0af495861768687afc77343bab9a8d502365aa4cae6202779f72a2ee836d",
+      "por_fonte": {
+        "br-sgb-setorizacao": 1128
+      },
+      "por_grau": {
+        "Alto": 550,
+        "Muito alto": 578
+      }
+    },
+    "pb": {
+      "arquivo": "setores_pb.geojson",
+      "setores": 192,
+      "bytes": 568385,
+      "sha256": "97ffca78c7f3afed8e64a054e8938771b2b051ad1186b9341e2eef6e3723efd2",
+      "por_fonte": {
+        "br-sgb-setorizacao": 192
+      },
+      "por_grau": {
+        "Alto": 137,
+        "Muito alto": 55
+      }
+    },
+    "pe": {
+      "arquivo": "setores_pe.geojson",
+      "setores": 1472,
+      "bytes": 4522912,
+      "sha256": "14ae7b767abb38d9a48339d60371ab0cf4dbfae7e803d2123602fbdb1ac4c535",
+      "por_fonte": {
+        "br-sgb-setorizacao": 1108,
+        "pe-recife-sedec": 364
+      },
+      "por_grau": {
+        "Alto": 1090,
+        "Muito alto": 297,
+        "Médio": 64,
+        "sem grau": 21
+      }
+    },
+    "pi": {
+      "arquivo": "setores_pi.geojson",
+      "setores": 272,
+      "bytes": 853412,
+      "sha256": "35aeb3eab26a3b207fa3867eaeaf67b74a8cdaada75ef6e8b278c67f67787312",
+      "por_fonte": {
+        "br-sgb-setorizacao": 272
+      },
+      "por_grau": {
+        "Alto": 162,
+        "Muito alto": 16,
+        "Médio": 94
+      }
+    },
+    "pr": {
+      "arquivo": "setores_pr.geojson",
+      "setores": 244,
+      "bytes": 773715,
+      "sha256": "eba3ffd4bba5693465ec0a3b962ebf3241aea5005f3fa83f4d9c8388b1da2afb",
+      "por_fonte": {
+        "br-sgb-setorizacao": 244
+      },
+      "por_grau": {
+        "Alto": 142,
+        "Muito alto": 102
+      }
+    },
+    "rj": {
+      "arquivo": "setores_rj.geojson",
+      "setores": 346,
+      "bytes": 2060206,
+      "sha256": "0c45ee32253a750b18b7976964867b24588ed6ec23c42f4a7b726c8c17c77b4a",
+      "por_fonte": {
+        "br-sgb-setorizacao": 346
+      },
+      "por_grau": {
+        "Alto": 53,
+        "Muito alto": 293
+      }
+    },
+    "rn": {
+      "arquivo": "setores_rn.geojson",
+      "setores": 94,
+      "bytes": 297402,
+      "sha256": "ffb56b36cc5116ed542fbe52be64a21ce766dedcbe70efd0f1071c28f748201e",
+      "por_fonte": {
+        "br-sgb-setorizacao": 94
+      },
+      "por_grau": {
+        "Alto": 86,
+        "Muito alto": 8
+      }
+    },
+    "ro": {
+      "arquivo": "setores_ro.geojson",
+      "setores": 143,
+      "bytes": 1911805,
+      "sha256": "d719a01f0270438f7ab45748f7f33f6e9cb7358b79a71c5b25562692b51bbe75",
+      "por_fonte": {
+        "br-sgb-setorizacao": 143
+      },
+      "por_grau": {
+        "Alto": 116,
+        "Muito alto": 27
+      }
+    },
+    "rr": {
+      "arquivo": "setores_rr.geojson",
+      "setores": 33,
+      "bytes": 85144,
+      "sha256": "176f4ebb171263fb17f14becf8e2d4f2e376b11da6048803f48c9a7fdca25ed0",
+      "por_fonte": {
+        "br-sgb-setorizacao": 33
+      },
+      "por_grau": {
+        "Alto": 9,
+        "Muito alto": 24
+      }
+    },
+    "rs": {
+      "arquivo": "setores_rs.geojson",
+      "setores": 2694,
+      "bytes": 10365773,
+      "sha256": "68769b73c5450fae457f32e3da13eb9fd70afddd25c1ca74f73ec959c5121d8c",
+      "por_fonte": {
+        "br-sgb-setorizacao": 2694
+      },
+      "por_grau": {
+        "Alto": 1502,
+        "Muito alto": 1038,
+        "Médio": 154
+      }
+    },
+    "sc": {
+      "arquivo": "setores_sc.geojson",
+      "setores": 3180,
+      "bytes": 11921133,
+      "sha256": "1487f4bf36b08015ca8b6ab7e3840e23dc3a865b3da0c694c73b816220ddc0d8",
+      "por_fonte": {
+        "br-sgb-setorizacao": 3180
+      },
+      "por_grau": {
+        "Alto": 2401,
+        "Muito alto": 669,
+        "Médio": 110
+      }
+    },
+    "se": {
+      "arquivo": "setores_se.geojson",
+      "setores": 131,
+      "bytes": 443382,
+      "sha256": "9c3c013ad8dad780a58313b6ff3edc404d7bb6c4de36e5ddcb01f97516b0b513",
+      "por_fonte": {
+        "br-sgb-setorizacao": 131
+      },
+      "por_grau": {
+        "Alto": 97,
+        "Muito alto": 34
+      }
+    },
+    "sp": {
+      "arquivo": "setores_sp.geojson",
+      "setores": 1085,
+      "bytes": 3378938,
+      "sha256": "e553405bed2ec2bd14dfb8b26cec2ea8d31d2579d0e1bbc49886b933c254b38e",
+      "por_fonte": {
+        "br-sgb-setorizacao": 907,
+        "sp-suzano-defesa-civil": 178
+      },
+      "por_grau": {
+        "Alto": 786,
+        "Baixo": 36,
+        "Muito alto": 205,
+        "Médio": 58
+      }
+    },
+    "to": {
+      "arquivo": "setores_to.geojson",
+      "setores": 9,
+      "bytes": 19799,
+      "sha256": "ee62604e6429eeddada440143fcde56568ea991722adc0c55e33b9ab4e63b9f6",
+      "por_fonte": {
+        "br-sgb-setorizacao": 9
+      },
+      "por_grau": {
+        "Alto": 8,
+        "Muito alto": 1
+      }
+    }
+  },
+  "arquivos": {
+    "pmtiles": {
+      "arquivo": "setores.pmtiles",
+      "url": "https://hcristosm.github.io/BELUGA/v1/setores.pmtiles",
+      "bytes": 77332480,
+      "sha256": "4e12b25c1f6cb02c8a11a9210de0f52c616c4ae747d297b659f6478af97811b9"
+    },
+    "gpkg": {
+      "arquivo": "setores.gpkg",
+      "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores.gpkg",
+      "bytes": 61304832,
+      "sha256": "f95ed14dc6186d70c84e01cdb120d51e8e79dd82f89c27bc5656ad4b3f5a5ef9"
+    },
+    "parquet": {
+      "arquivo": "setores.parquet",
+      "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores.parquet",
+      "bytes": 20475355,
+      "sha256": "cb65ccb28f379bf80f33637a3aa2986db2fcc6bef89e6aa757bfb2f7da8d6101"
+    },
+    "csv": {
+      "arquivo": "setores.csv",
+      "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores.csv",
+      "bytes": 25837277,
+      "sha256": "eba73e0891f9f175f0fa33cb1abed1407fbd303f2589d27a7bc6b841816baae7"
+    },
+    "shapefile": {
+      "por_uf": {
+        "ac": {
+          "arquivo": "setores_ac.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ac.zip",
+          "bytes": 187857,
+          "sha256": "8bdf5147dad577cc4c02a49ffbcbec1d832837284d439f7a68262e8cd514b703"
+        },
+        "al": {
+          "arquivo": "setores_al.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_al.zip",
+          "bytes": 182258,
+          "sha256": "3e66d7593e44ca1c9d23fc8acd1a8aec7ae88c15efb98f3c210e08a3dd513d68"
+        },
+        "am": {
+          "arquivo": "setores_am.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_am.zip",
+          "bytes": 711617,
+          "sha256": "8687b1ea14a6c8457788f7bc56d2aec1870e2390a5ba7f87025af4d6e4042200"
+        },
+        "ap": {
+          "arquivo": "setores_ap.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ap.zip",
+          "bytes": 59383,
+          "sha256": "ff1f265507f9014f57d3992ac50c8a0cbf111b9f5d85f4606aa58799646babb9"
+        },
+        "ba": {
+          "arquivo": "setores_ba.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ba.zip",
+          "bytes": 642704,
+          "sha256": "b5d05f650869451c2029c69c2714cb4ded691ef6da39fa70bcbb21744cdf999e"
+        },
+        "ce": {
+          "arquivo": "setores_ce.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ce.zip",
+          "bytes": 357296,
+          "sha256": "d1402ccac33ab6d5fc76863e00979da98b55704cd6e757a53ac1bf03485d08dc"
+        },
+        "df": {
+          "arquivo": "setores_df.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_df.zip",
+          "bytes": 10393,
+          "sha256": "39b492da057b2fb40100758b965adc3204f0a3d845755794a5791bafca117e1c"
+        },
+        "es": {
+          "arquivo": "setores_es.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_es.zip",
+          "bytes": 1041670,
+          "sha256": "15d72054a54dc3690866d88b860de1f9991982778801a13b0efce4dc8787552d"
+        },
+        "go": {
+          "arquivo": "setores_go.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_go.zip",
+          "bytes": 260622,
+          "sha256": "b7541a329a206c4f3ce8f845ccb86f43a68b5140e5a4214b445f204272e2375f"
+        },
+        "ma": {
+          "arquivo": "setores_ma.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ma.zip",
+          "bytes": 419795,
+          "sha256": "5c7c1b7dad968b7a2c594337f13ae370443e57a60aa03472c778c931f68f0118"
+        },
+        "mg": {
+          "arquivo": "setores_mg.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_mg.zip",
+          "bytes": 5427652,
+          "sha256": "65214aeeeb8e54f012f7131d41d29635a1558f848f483e655560a0ae62804081"
+        },
+        "ms": {
+          "arquivo": "setores_ms.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ms.zip",
+          "bytes": 39493,
+          "sha256": "f6194ed6b374805d17ab3003c2520b28d0b3f28d033a968caaa63351826faf6a"
+        },
+        "mt": {
+          "arquivo": "setores_mt.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_mt.zip",
+          "bytes": 80768,
+          "sha256": "7b97bad10e5a8a25b6b7217236e695159513a9a0cad07ab8fb559bd6aaa3a5a1"
+        },
+        "pa": {
+          "arquivo": "setores_pa.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_pa.zip",
+          "bytes": 961070,
+          "sha256": "dc56fc86b089670b538c86b1afd08a8047283c918ffc33bba00a7dd4483175d6"
+        },
+        "pb": {
+          "arquivo": "setores_pb.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_pb.zip",
+          "bytes": 136347,
+          "sha256": "bcf0d18f568e65dc39c5b23006411054969806cab7b20c21427142501ffda72d"
+        },
+        "pe": {
+          "arquivo": "setores_pe.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_pe.zip",
+          "bytes": 871998,
+          "sha256": "ccf9c8f7eb788b8caa96048ddba7b692ad93a500c644a2b8db7b58cc43d937d1"
+        },
+        "pi": {
+          "arquivo": "setores_pi.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_pi.zip",
+          "bytes": 140559,
+          "sha256": "f66b5832a81740a39eb8de9b5f3a0bc096a4f58f321d908e542e354e48265904"
+        },
+        "pr": {
+          "arquivo": "setores_pr.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_pr.zip",
+          "bytes": 197514,
+          "sha256": "b439415bec04ed656dd7556f7c4135544a3e85cc8f6a6e1ba5ee2faab5fe7f03"
+        },
+        "rj": {
+          "arquivo": "setores_rj.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_rj.zip",
+          "bytes": 658113,
+          "sha256": "2014f257fa1605a33de0ed09f01583fef35eae8de5bfeb0040fce6b4d64083e6"
+        },
+        "rn": {
+          "arquivo": "setores_rn.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_rn.zip",
+          "bytes": 63231,
+          "sha256": "73c4380b6445a6c0e3280b2a445f29505960a17c08f908d0f352f8963f42f2ec"
+        },
+        "ro": {
+          "arquivo": "setores_ro.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_ro.zip",
+          "bytes": 704803,
+          "sha256": "b25622a06ee3d928b240ed5db0ea67b140c760a93a385f618f756bdd436a5b2d"
+        },
+        "rr": {
+          "arquivo": "setores_rr.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_rr.zip",
+          "bytes": 19838,
+          "sha256": "7c045ea01c6b9d627357b06d59f7a3879e0fbe2b3e4f4ea3067b02a456068e06"
+        },
+        "rs": {
+          "arquivo": "setores_rs.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_rs.zip",
+          "bytes": 1522310,
+          "sha256": "f7b8efaa231099aa3b88036038e5a08251299b624b0f331044503df4a503d654"
+        },
+        "sc": {
+          "arquivo": "setores_sc.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_sc.zip",
+          "bytes": 2905669,
+          "sha256": "fe0aeac5e9f72bceac204da3d129edd7f800fcef972375606ff1539eabec1851"
+        },
+        "se": {
+          "arquivo": "setores_se.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_se.zip",
+          "bytes": 84923,
+          "sha256": "5d724696d4fc214091be125ed085516870cc1a1ff1262e264b3cb6998d7f81ec"
+        },
+        "sp": {
+          "arquivo": "setores_sp.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_sp.zip",
+          "bytes": 773525,
+          "sha256": "5bfee250feaa325aa7334cc1ca91853895a548575168128ff221e6822dfc6538"
+        },
+        "to": {
+          "arquivo": "setores_to.zip",
+          "url": "https://github.com/hcristosm/BELUGA/releases/latest/download/setores_to.zip",
+          "bytes": 6416,
+          "sha256": "ad6441505dca666d33e34aae8389963097357fd20af3cbb3b4886670eaab39c6"
+        }
+      }
+    }
+  },
+  "fontes": [
+    {
+      "id": "br-sgb-setorizacao",
+      "nome": "Setorização de Risco Geológico (CPRM/SGB)",
+      "orgao": "Serviço Geológico do Brasil (SGB/CPRM)",
+      "esfera": "federal",
+      "uf": "BR",
+      "municipios": [],
+      "produto": "setorizacao_risco",
+      "status": "ativa",
+      "publicada": true,
+      "acesso": {
+        "tipo": "arcgis_rest",
+        "url": "https://geoportal.sgb.gov.br/server/rest/services/gestaoterritorial/risco/FeatureServer/0",
+        "pagina": null
+      },
+      "licenca": {
+        "nome": "não declarada no serviço",
+        "url": null,
+        "observacao": "dado público federal; o serviço ArcGIS não traz texto de licença"
+      },
+      "ultima_verificacao": "2026-11-21",
+      "notas": "Base que o ORCA usa hoje. O BELUGA guarda a cópia normalizada para o ORCA poder puxar todos os setores (CPRM e demais fontes) de um lugar só.",
+      "coletado_em": "2026-11-27T02:43:28+00:00",
+      "setores_publicados": 18890
+    },
+    {
+      "id": "mg-belo-horizonte-pbh",
+      "nome": "Área de Risco Geológico de Belo Horizonte",
+      "orgao": "Prefeitura de Belo Horizonte (publicação Prodabel; estudo UFMG 1996 e Sudecap)",
+      "esfera": "municipal",
+      "uf": "MG",
+      "municipios": [
+        {
+          "nome": "Belo Horizonte",
+          "cd_ibge": "3106200"
+        }
+      ],
+      "produto": "area_risco_sem_grau",
+      "status": "ativa",
+      "publicada": true,
+      "acesso": {
+        "tipo": "arquivo",
+        "url": "https://ckan.pbh.gov.br/dataset/303d0e6a-dca9-41e8-b4cb-289dc5297615/resource/a5846209-2281-462b-9a49-94d56769497e/download/20250102_area_risco_geologico.csv",
+        "pagina": "https://dados.pbh.gov.br/dataset/area-risco-geologico"
+      },
+      "licenca": {
+        "nome": "Creative Commons Atribuição",
+        "url": null,
+        "observacao": "licença declarada no portal de dados abertos da PBH"
+      },
+      "ultima_verificacao": "2026-11-21",
+      "notas": "Não é setorização: são áreas com tendência a risco geológico mapeadas em 1996, sem grau. A CPRM não tem setores em Belo Horizonte. A setorização atual é da Urbel e não foi encontrada em dado aberto.",
+      "coletado_em": "2026-11-27T02:43:33+00:00",
+      "setores_publicados": 665
+    },
+    {
+      "id": "mg-congonhas-pmrr",
+      "nome": "Risco geológico do Plano Municipal de Redução de Risco de Congonhas",
+      "orgao": "Prefeitura de Congonhas (ConSIG, Secretaria de Planejamento)",
+      "esfera": "municipal",
+      "uf": "MG",
+      "municipios": [
+        {
+          "nome": "Congonhas",
+          "cd_ibge": "3118007"
+        }
+      ],
+      "produto": "setorizacao_risco",
+      "status": "ativa",
+      "publicada": true,
+      "acesso": {
+        "tipo": "arcgis_rest",
+        "url": "https://services8.arcgis.com/s4GRnqeg1etTzWrc/arcgis/rest/services/Plano_de_Redu%C3%A7%C3%A3o_de_Risco/FeatureServer/1",
+        "pagina": null
+      },
+      "licenca": {
+        "nome": "não declarada",
+        "url": null,
+        "observacao": "item público no ArcGIS Online com crédito 'ConSIG - Sistema de Informações Geográficas de Congonhas'"
+      },
+      "ultima_verificacao": "2026-11-21",
+      "notas": "73 setores de R2 a R4 do PMRR de Congonhas. A CPRM tem 24 setores no município. Os atributos são só setor, grau e processo.",
+      "coletado_em": "2026-11-27T02:43:48+00:00",
+      "setores_publicados": 73
+    },
+    {
+      "id": "mg-contagem-defesa-civil-2024",
+      "nome": "Risco geológico e hidrológico de Contagem (2024)",
+      "orgao": "Prefeitura de Contagem",
+      "esfera": "municipal",
+      "uf": "MG",
+      "municipios": [
+        {
+          "nome": "Contagem",
+          "cd_ibge": "3118601"
+        }
+      ],
+      "produto": "ponto_risco",
+      "status": "ativa",
+      "publicada": true,
+      "acesso": {
+        "tipo": "arcgis_rest",
+        "url": "https://geoprocessamento.contagem.mg.gov.br/arcgis/rest/services/Hosted/Risco_geol%C3%B3gico_e_hidrol%C3%B3gico_2024/FeatureServer/0",
+        "pagina": null
+      },
+      "licenca": {
+        "nome": "não declarada",
+        "url": null,
+        "observacao": null
+      },
+      "ultima_verificacao": "2026-11-21",
+      "notas": "265 pontos (125 geológicos e 140 hidrológicos) do levantamento de 2024 da prefeitura, com grau de Baixo a Muito alto. Diferente da fonte espelho mg-contagem-espelho-cprm, que só republica os 28 setores da CPRM.",
+      "coletado_em": "2026-11-27T02:43:53+00:00",
+      "setores_publicados": 265
+    },
+    {
+      "id": "mg-contagem-espelho-cprm",
+      "nome": "Setorização de risco geológico de Contagem",
+      "orgao": "Prefeitura de Contagem (republicação da setorização da CPRM)",
+      "esfera": "municipal",
+      "uf": "MG",
+      "municipios": [
+        {
+          "nome": "Contagem",
+          "cd_ibge": "3118601"
+        }
+      ],
+      "produto": "setorizacao_risco",
+      "status": "ativa",
+      "publicada": false,
+      "acesso": {
+        "tipo": "arcgis_rest",
+        "url": "https://geoprocessamento.contagem.mg.gov.br/arcgis/rest/services/Hosted/Setoriza%C3%A7%C3%A3o_de_risco_geol%C3%B3gico/FeatureServer/0",
+        "pagina": null
+      },
+      "licenca": {
+        "nome": "não declarada",
+        "url": null,
+        "observacao": null
+      },
+      "ultima_verificacao": "2026-11-21",
+      "notas": "Os 28 setores são os mesmos da CPRM (num_setor MG_CO_SR_NN_CPRM). Fica no catálogo como fonte espelho e caso de teste da sobreposição, sem ir para a publicação (publicar: false).",
+      "coletado_em": "2026-11-27T02:43:58+00:00",
+      "setores_publicados": 0
+    },
+    {
+      "id": "mg-juiz-de-fora-sspdc",
+      "nome": "Setores de risco geológico de Juiz de Fora",
+      "orgao": "Subsecretaria de Proteção e Defesa Civil (SSPDC), Prefeitura de Juiz de Fora",
+      "esfera": "municipal",
+      "uf": "MG",
+      "municipios": [
+        {
+          "nome": "Juiz de Fora",
+          "cd_ibge": "3136702"
+        }
+      ],
+      "produto": "setorizacao_risco",
+      "status": "ativa",
+      "publicada": true,
+      "acesso": {
+        "tipo": "arcgis_rest",
+        "url": "https://sisurb.pjf.mg.gov.br/server/rest/services/SISURB_dcivil/risco_geologico_2026_02_2/MapServer/0",
+        "pagina": null
+      },
+      "licenca": {
+        "nome": "não declarada",
+        "url": null,
+        "observacao": "o serviço traz apenas o crédito 'Defesa Civil.'; confirmar os termos com a prefeitura"
+      },
+      "ultima_verificacao": "2026-11-21",
+      "notas": "A CPRM tem 80 setores em Juiz de Fora; esta fonte tem 994, de R1 a R4, compilados pela SSPDC a partir de mapeamentos próprios, da CPRM (2017) e do PMRR (2007). O campo ORIGEM_MAP traz o ano, não a data, por isso data_setor fica vazio.",
+      "coletado_em": "2026-11-27T02:44:04+00:00",
+      "setores_publicados": 994
+    },
+    {
+      "id": "pe-recife-sedec",
+      "nome": "Áreas de Risco da Regional Sul do Recife",
+      "orgao": "Secretaria Executiva de Defesa Civil do Recife (Sedec), Prefeitura do Recife",
+      "esfera": "municipal",
+      "uf": "PE",
+      "municipios": [
+        {
+          "nome": "Recife",
+          "cd_ibge": "2611606"
+        }
+      ],
+      "produto": "ponto_risco",
+      "status": "ativa",
+      "publicada": true,
+      "acesso": {
+        "tipo": "arquivo",
+        "url": "https://dados.recife.pe.gov.br/dataset/c1d733d9-5867-481e-9c18-5fe572300ab2/resource/ec18759d-fac2-445e-ae72-af9d9210b831/download/coordenadas-geograficas-da-regiao-sul.geojson",
+        "pagina": "https://dados.recife.pe.gov.br/dataset/defesa-civil"
+      },
+      "licenca": {
+        "nome": "Open Data Commons Open Database License (ODbL)",
+        "url": "https://opendatacommons.org/licenses/odbl/",
+        "observacao": "compartilha-igual; o derivado publicado pelo BELUGA também fica sob ODbL"
+      },
+      "ultima_verificacao": "2026-11-21",
+      "notas": "São pontos (imóveis/endereços), não polígonos, e só da Regional Sul. A correspondência entre \"Nível N\" e os graus R1 a R4 da CPRM é suposição do BELUGA; o arquivo não traz tipologia. A CPRM não tem setores no Recife.",
+      "coletado_em": "2026-11-27T02:44:15+00:00",
+      "setores_publicados": 364
+    },
+    {
+      "id": "rj-rio-de-janeiro-georio",
+      "nome": "Risco geológico do município do Rio de Janeiro (GEO-RIO)",
+      "orgao": "Fundação Instituto de Geotécnica do Município do Rio de Janeiro (GEO-RIO)",
+      "esfera": "municipal",
+      "uf": "RJ",
+      "municipios": [
+        {
+          "nome": "Rio de Janeiro",
+          "cd_ibge": "3304557"
+        }
+      ],
+      "produto": "suscetibilidade",
+      "status": "precisa_contato",
+      "publicada": false,
+      "acesso": {
+        "tipo": "arcgis_rest",
+        "url": "https://pgeo3.rio.rj.gov.br/arcgis/rest/services/Geotecnia/Suscetibilidade_a_deslizamentos/MapServer",
+        "pagina": null
+      },
+      "licenca": {
+        "nome": "não verificada",
+        "url": null,
+        "observacao": null
+      },
+      "ultima_verificacao": "2026-11-21",
+      "notas": "O ArcGIS da prefeitura (pgeo3.rio.rj.gov.br) publica a suscetibilidade a deslizamentos só em raster e, na pasta Defesa_Civil, apenas pontos (sirenes, pontos de apoio, NUPDEC). Não há setores de risco vetoriais abertos. A CPRM não tem setores no Rio de Janeiro.",
+      "coletado_em": null,
+      "setores_publicados": 0
+    },
+    {
+      "id": "sp-datageo-ipt",
+      "nome": "Mapeamentos de risco do IPT no DataGEO",
+      "orgao": "Instituto de Pesquisas Tecnológicas (IPT) e SEMIL-SP (DataGEO)",
+      "esfera": "estadual",
+      "uf": "SP",
+      "municipios": [],
+      "produto": "setorizacao_risco",
+      "status": "nao_verificada",
+      "publicada": false,
+      "acesso": {
+        "tipo": "visualizacao_web",
+        "url": "https://datageo.ambiente.sp.gov.br/",
+        "pagina": null
+      },
+      "licenca": {
+        "nome": "não verificada",
+        "url": null,
+        "observacao": null
+      },
+      "ultima_verificacao": "2026-11-21",
+      "notas": "Segundo a SEMIL, o DataGEO exibe centenas de camadas de risco do IPT, com os dados nos servidores do próprio IPT. O portal responde, mas o serviço de dados (WMS/WFS) das camadas de risco não foi localizado.",
+      "coletado_em": null,
+      "setores_publicados": 0
+    },
+    {
+      "id": "sp-sao-paulo-geosampa",
+      "nome": "Risco Geológico do município de São Paulo (GeoSampa)",
+      "orgao": "Prefeitura de São Paulo (Defesa Civil e SMUL)",
+      "esfera": "municipal",
+      "uf": "SP",
+      "municipios": [
+        {
+          "nome": "São Paulo",
+          "cd_ibge": "3550308"
+        }
+      ],
+      "produto": "setorizacao_risco",
+      "status": "nao_verificada",
+      "publicada": false,
+      "acesso": {
+        "tipo": "visualizacao_web",
+        "url": "https://geosampa.prefeitura.sp.gov.br/",
+        "pagina": null
+      },
+      "licenca": {
+        "nome": "não verificada",
+        "url": null,
+        "observacao": null
+      },
+      "ultima_verificacao": "2026-11-21",
+      "notas": "A prefeitura cita a camada \"Risco Geológico\" (setores R1 a R4, mapeamento do IPT de 2010 atualizado até 2022) com download e WFS no GeoSampa. Em 2026-11-21 os servidores do GeoSampa fecharam a conexão TLS vinda do BELUGA, então o endpoint e o nome da camada não foram confirmados.",
+      "coletado_em": null,
+      "setores_publicados": 0
+    },
+    {
+      "id": "sp-suzano-defesa-civil",
+      "nome": "Setores de risco de Suzano (2019)",
+      "orgao": "Prefeitura de Suzano (INFODATA Suzano)",
+      "esfera": "municipal",
+      "uf": "SP",
+      "municipios": [
+        {
+          "nome": "Suzano",
+          "cd_ibge": "3552502"
+        }
+      ],
+      "produto": "setorizacao_risco",
+      "status": "ativa",
+      "publicada": true,
+      "acesso": {
+        "tipo": "arcgis_rest",
+        "url": "https://services8.arcgis.com/q05L6PnVEyBJZq9L/arcgis/rest/services/Setores_de_risco_2019/FeatureServer/0",
+        "pagina": null
+      },
+      "licenca": {
+        "nome": "não declarada",
+        "url": null,
+        "observacao": "camada pública no ArcGIS Online da prefeitura, sem texto de licença"
+      },
+      "ultima_verificacao": "2026-11-21",
+      "notas": "178 setores de R1 a R4 da Defesa Civil de Suzano. A CPRM não tem setores em Suzano. A camada traz o ano (2019) no nome, não a data de cada setor, por isso data_setor fica vazio.",
+      "coletado_em": "2026-11-27T02:44:20+00:00",
+      "setores_publicados": 178
+    }
+  ]
+}

@@ -83,6 +83,7 @@ CASAS_CENTROIDE = 6  # ~10 cm; o centroide do CSV é referência, não geometria
 PMTILES_ZOOM_MIN = 5
 PMTILES_ZOOM_MAX = 14
 PMTILES_CAMADA = "setores"
+PMTILES_DESCRICAO = "Setores de risco geológico do Brasil (BELUGA, contrato v1)"
 # Assinatura de um PMTiles v3: "PMTiles" e a versão do formato. O tippecanoe
 # escolhe o formato de saída pela EXTENSÃO do arquivo, então um temporário
 # terminado em .tmp faz ele gravar MBTiles (SQLite) com nome de PMTiles, sem
@@ -268,6 +269,10 @@ def _gravar_pmtiles(entradas: list[Path], destino: Path) -> None:
     comando = [
         "tippecanoe", "-o", str(temporario), "--force",
         "-l", PMTILES_CAMADA,
+        # Sem -n e -N, o tippecanoe usa o nome do arquivo de saída, e aí o
+        # caminho do temporário (com ".tmp") vai no metadata publicado.
+        "-n", PMTILES_CAMADA,
+        "-N", PMTILES_DESCRICAO,
         "-Z", str(PMTILES_ZOOM_MIN), "-z", str(PMTILES_ZOOM_MAX),
         "--drop-densest-as-needed",
         *[str(e) for e in entradas],

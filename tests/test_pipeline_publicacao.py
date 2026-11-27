@@ -392,6 +392,8 @@ def test_pmtiles_monta_o_comando_e_troca_atomicamente(tmp_path, fonte, cliente, 
     argumentos = log.read_text().split("\n")
     assert "-l" in argumentos and "setores" in argumentos
     assert "--drop-densest-as-needed" in argumentos
+    # -n e -N: sem eles o metadata publicado leva o caminho do temporário.
+    assert "-n" in argumentos and "-N" in argumentos
     assert "-Z" in argumentos and "-z" in argumentos
     # Recebe os GeoJSON por UF já gravados, não um temporário nosso.
     assert str(saida / "setores_mg.geojson") in argumentos

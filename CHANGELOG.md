@@ -11,6 +11,7 @@ O projeto segue [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ### FIXES
 - fix(export): o PMTiles publicado era MBTiles. O tippecanoe escolhe o formato de saída pela extensão do arquivo, e o temporário da escrita atômica terminava em `.tmp`, então ele gravou SQLite com nome `.pmtiles`, saiu com 0 e o arquivo foi para o ar com tamanho plausível e conteúdo que nenhum leitor de PMTiles abre. O temporário passa a manter a extensão `.pmtiles`, e a exportação confere a assinatura `PMTiles\x03` do arquivo gerado antes de aceitá-lo, porque o formato é decidido por ferramenta externa e extensão não é prova
+- fix(export): o PMTiles passa `-n` e `-N` ao tippecanoe. Sem eles, o `name` e o `description` do metadata publicado vinham do nome do arquivo de saída, ou seja, levavam o caminho do temporário
 
 ## [1.0.0] - 2026-11-27
 

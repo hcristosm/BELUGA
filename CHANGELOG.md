@@ -7,7 +7,7 @@ e cada item usa o prefixo do commit correspondente, no padrão
 [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/).
 O projeto segue [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [Unreleased]
+## [1.1.0] - 2026-11-27
 
 ### FEATURES
 - feat(logo): ícone próprio para o visualizador. O `beluga-192.png` era a marca inteira, que é 2:1, encaixada num quadrado: sobravam tarjas, a beluga ficava com 20 px de altura e em 32 px virava borrão. O ícone passa a sair do recorte da cabeça com as ondas de sonar, sobre cartão arredondado claro com cantos transparentes, porque o miolo da cabeça é transparente na arte e sem fundo a beluga sumia no painel escuro. O `beluga-icone.png` vira `beluga-marca.png`, que é o que ele sempre foi, o header do README vira WebP e cai de 982 KB para 22 KB, e `scripts/gerar_logos.py` refaz tudo a partir da marca

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "beluga"
-version = "1.0.0"
+version = "1.1.0"
 description = "Catálogo e base padronizada de setores de risco geológico do Brasil (CPRM/SGB e fontes estaduais e municipais)"
 requires-python = ">=3.11"
 license = "AGPL-3.0-or-later"
